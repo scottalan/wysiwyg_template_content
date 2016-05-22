@@ -6,6 +6,7 @@ use Drupal\Core\Entity\BundleEntityFormBase;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Link;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -57,6 +58,7 @@ class LibraryForm extends BundleEntityFormBase {
       '#title' => $this->t('Name'),
       '#maxlength' => 255,
       '#required' => TRUE,
+      '#default_value' => $library->label(),
     );
 
     $form['library_id'] = array(
@@ -66,11 +68,13 @@ class LibraryForm extends BundleEntityFormBase {
         'exists' => array($this, 'exists'),
         'source' => array('name'),
       ),
+      '#default_value' => $library->id(),
     );
 
     $form['description'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Description'),
+      '#default_value' => $library->getDescription(),
     );
 
     return $this->protectBundleIdElement($form);
@@ -80,42 +84,38 @@ class LibraryForm extends BundleEntityFormBase {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
+    $status = $this->entity->save();
     $library = $this->entity;
 
-    // Prevent leading and trailing spaces in library names.
-    $library->set('name', trim($library->label()));
-
-    $status = $library->save();
-    $edit_link = $this->entity->toLink($this->t('Edit'), 'edit-form');
+    $edit_link = $library->toUrl('edit-form')->toString();
     switch ($status) {
       case SAVED_NEW:
         drupal_set_message($this->t('Created new library %name.', array('%name' => $library->label())));
-        $this->logger('wysiwyg_template_content')->notice('Created new library %name.', array('%name' => $library->label(), 'link' => $edit_link));
-        $form_state->setRedirectUrl($library->toUrl('overview-form'));
+        $this->logger('wysiwyg_template_library')->notice('Created new library %name.', array('%name' => $library->label(), 'link' => $edit_link));
         break;
 
       case SAVED_UPDATED:
         drupal_set_message($this->t('Updated library %name.', array('%name' => $library->label())));
-        $this->logger('taxonomy')->notice('Updated library %name.', array('%name' => $library->label(), 'link' => $edit_link));
-        $form_state->setRedirectUrl($library->urlInfo('collection'));
+        $this->logger('wysiwyg_template_library')->notice('Updated library %name.', array('%name' => $library->label(), 'link' => $edit_link));
         break;
     }
 
-    $form_state->setValue('library_id', $library->id());
-    $form_state->set('library_id', $library->id());
+    $form_state->setRedirectUrl($library->toUrl('collection'));
+//    $form_state->setValue('library_id', $library->id());
+//    $form_state->set('library_id', $library->id());
   }
 
   /**
    * Determines if the library already exists.
    *
-   * @param string $lid
+   * @param string $library_id
    *   The library ID.
    *
    * @return bool
    *   TRUE if the library exists, FALSE otherwise.
    */
-  public function exists($lid) {
-    $action = $this->libraryStorage->load($lid);
+  public function exists($library_id) {
+    $action = $this->libraryStorage->load($library_id);
     return !empty($action);
   }
 
