@@ -1,0 +1,55 @@
+wysiwyg_template_content.admin_wysiwyg_template_content:
+  path: '/admin/wysiwyg-template'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'WYSIWYG Template'
+  requirements:
+    _permission: 'administer wysiwyg templates'
+
+wysiwyg_template_content.configuration:
+  path: '/admin/wysiwyg-template/config'
+  defaults:
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Configuration'
+  requirements:
+    _permission: 'administer wysiwyg templates'
+
+
+
+
+
+entity.wysiwyg_template_content.add_page:
+  path: '/admin/wysiwyg-template/templates/add'
+  defaults:
+    _form: '\Drupal\wysiwyg_template_content\Form\TemplateContentForm'
+    _title: 'Create a new template'
+  requirements:
+    _entity_create_access: 'wysiwyg_template_content'
+
+#entity.wysiwyg_template_content.reassign_form:
+#  path: '/admin/wysiwyg-template/templates/{wysiwyg_template_content}/reassign'
+#  defaults:
+#    _form: '\Drupal\wysiwyg_template_content\Form\OrderReassignForm'
+#    _title: 'Reassign template'
+#  options:
+#    parameters:
+#      wysiwyg_template_content:
+#        type: 'entity:wysiwyg_template_content'
+#  requirements:
+#    _permission: 'administer wysiwyg templates'
+
+entity.wysiwyg_template_library.collection:
+  path: '/admin/wysiwyg-template/config/libraries'
+  defaults:
+    _entity_list: 'wysiwyg_template_library'
+    _title: 'Libraries'
+  requirements:
+    _permission: 'administer template libraries'
+
+entity.wysiwyg_template_content.collection:
+  path: '/admin/wysiwyg-template/templates'
+  defaults:
+    _entity_list: 'wysiwyg_template_content'
+    _title: 'Templates'
+  requirements:
+    _permission: 'administer wysiwyg templates'

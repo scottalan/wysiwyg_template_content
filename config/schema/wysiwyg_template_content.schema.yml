@@ -1,0 +1,35 @@
+wysiwyg_template_content.wysiwyg_template_content.*:
+  type: config_entity
+  label: 'WYSIWYG Template Content'
+  mapping:
+    id:
+      type: string
+      label: 'ID'
+    label:
+      type: label
+      label: 'Label'
+    uuid:
+      type: string
+      label: 'UUID'
+    description:
+      type: string
+      label: 'Description'
+    body:
+      type: text_format
+      label: 'The WYSIWYG template HTML'
+    weight:
+      type: integer
+      label: 'Weight'
+    node_types:
+      type: sequence
+      label: 'Available content types'
+      sequence:
+        type: string
+
+node.type.*.third_party.wysiwyg_template_content:
+  type: mapping
+  label: 'Per content-type WYISIWYG template settings'
+  mapping:
+    default_template:
+      label: 'Template Content to use for populating new content of this type'
+      type: string

@@ -1,0 +1,14 @@
+entity.wysiwyg_template_content.collection:
+  route_name: entity.wysiwyg_template_content.collection
+  base_route: entity.wysiwyg_template_content.collection
+  title: 'Templates'
+
+entity.wysiwyg_template_content.edit_form:
+  route_name: 'entity.wysiwyg_template_content.edit_form'
+  base_route: 'entity.wysiwyg_template_content.edit_form'
+  title: 'Edit'
+
+entity.wysiwyg_template_library.edit_form:
+  route_name: 'entity.wysiwyg_template_library.edit_form'
+  base_route: 'entity.wysiwyg_template_library.edit_form'
+  title: 'Edit'
