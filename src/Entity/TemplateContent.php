@@ -20,7 +20,7 @@ use Drupal\wysiwyg_template_content\TemplateContentInterface;
  *
  * @ContentEntityType(
  *   id = "wysiwyg_template_content",
- *   label = @Translation("TemplateContent"),
+ *   label = @Translation("Template Content"),
  *   bundle_label = @Translation("Library"),
  *   handlers = {
  *     "storage" = "Drupal\Core\Entity\Sql\SqlContentEntityStorage",
@@ -46,7 +46,7 @@ use Drupal\wysiwyg_template_content\TemplateContentInterface;
  *     "uuid" = "uuid"
  *   },
  *   bundle_entity_type = "wysiwyg_template_library",
- *   field_ui_base_route = "entity.wysiwyg_template_content.edit_form",
+ *   field_ui_base_route = "entity.wysiwyg_template_library.edit_form",
  *   links = {
  *     "canonical" = "/admin/wysiwyg-template/templates/{wysiwyg_template_content}",
  *     "edit-form" = "/admin/wysiwyg-template/templates/{wysiwyg_template_content}/edit",
