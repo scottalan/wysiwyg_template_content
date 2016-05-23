@@ -21,7 +21,7 @@ wysiwyg_template_content.configuration:
 entity.wysiwyg_template_content.add_page:
   path: '/admin/wysiwyg-template/templates/add'
   defaults:
-    _form: '\Drupal\wysiwyg_template_content\Form\TemplateContentForm'
+    _form: '\Drupal\wysiwyg_template_content\Form\TemplateContentAddForm'
     _title: 'Create a new template'
   requirements:
     _entity_create_access: 'wysiwyg_template_content'
