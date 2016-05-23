@@ -6,18 +6,18 @@ wysiwyg_template_content.admin_wysiwyg_template_content:
   requirements:
     _permission: 'administer wysiwyg templates'
 
-entity.wysiwyg_template_content.add_page:
-  path: '/admin/wysiwyg-template/templates/add'
-  defaults:
-    _form: '\Drupal\wysiwyg_template_content\Form\TemplateContentAddForm'
-    _title: 'Create a new template'
-  requirements:
-    _entity_create_access: 'wysiwyg_template_content'
+#entity.wysiwyg_template_content.add_page:
+#  path: '/admin/wysiwyg-template/templates/add'
+#  defaults:
+#    _form: '\Drupal\wysiwyg_template_content\Form\TemplateContentAddForm'
+#    _title: 'Create a new template'
+#  requirements:
+#    _entity_create_access: 'wysiwyg_template_content'
 
 entity.wysiwyg_template_content.add_form:
   path: '/admin/wysiwyg-template/libraries/manage/{wysiwyg_template_library}/add'
   defaults:
-    _form: '\Drupal\wysiwyg_template_content\Form\TemplateContentAddForm'
+    _form: '\Drupal\wysiwyg_template_content\Form\TemplateContentForm'
     _title: 'Create a new template'
   requirements:
     _entity_create_access: 'wysiwyg_template_content'

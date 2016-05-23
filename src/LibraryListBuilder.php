@@ -18,14 +18,20 @@ class LibraryListBuilder extends ConfigEntityListBuilder {
   protected $library;
 
   /**
+   * @var \Drupal\wysiwyg_template_content\TemplateContentInterface
+   */
+  protected $templateForm;
+
+  /**
    * {@inheritdoc}
    */
   public function getDefaultOperations(EntityInterface $entity) {
     $operations = parent::getDefaultOperations($entity);
+    $template = $this->entityType('wysiwyg_template_content');
     $operations['add'] = array(
       'title' => t('Add template'),
       'weight' => 10,
-      'url' => Url::fromRoute('entity.wysiwyg_template_content.add_form', ['wysiwyg_template_library' => $entity->id()]),
+      'url' => $entity->toUrl('add-form', ['wysiwyg_template_library' => $entity->id()]),
     );
     // @todo: If no templates don't show.
     $operations['list'] = [

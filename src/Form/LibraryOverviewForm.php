@@ -71,6 +71,10 @@ class LibraryOverviewForm extends FormBase {
     // Set the form title to that of the library.
     $form['#title'] = $this->library->label();
 
+    if (empty($values)) {
+
+    }
+
     $wrapper_id = Html::getUniqueId('wysiwyg-template-library-values-ajax-wrapper');
     $form['values'] = [
       '#type' => 'table',
@@ -108,11 +112,10 @@ class LibraryOverviewForm extends FormBase {
         '#markup' => '',
       ];
 
-      $value_form['entity'] = [
-        '#type' => 'inline_entity_form',
-        '#entity_type' => 'wysiwyg_template_content',
-        '#bundle' => $this->library->id(),
-        '#save_entity' => FALSE,
+      $value_form['template'] = [
+        '#type' => 'link',
+        '#title' => t('title here'),
+//        '#url' => $term->urlInfo(),
       ];
       if ($id == '_new') {
         $default_weight = $max_weight;
@@ -120,7 +123,7 @@ class LibraryOverviewForm extends FormBase {
       }
       else {
         $value = $values[$id];
-        $value_form['entity']['#default_value'] = $value;
+        $value_form['template']['#default_value'] = $value;
         $default_weight = $value->getWeight();
         $remove_access = $value->access('delete');
       }
@@ -143,19 +146,43 @@ class LibraryOverviewForm extends FormBase {
         $value_form['#weight'] = $default_weight;
       }
 
-      $value_form['remove'] = [
-        '#type' => 'submit',
-        '#name' => 'remove_value' . $index,
-        '#value' => $this->t('Remove'),
-        '#limit_validation_errors' => [],
-        '#submit' => ['::removeValueSubmit'],
-        '#value_index' => $index,
-        '#ajax' => [
-          'callback' => '::valuesAjax',
-          'wrapper' => $wrapper_id,
+
+      $destination = $this->getDestinationArray();
+
+      $operations = [
+        'remove' => [
+          '#type' => 'submit',
+          '#name' => 'remove_value' . $index,
+          '#value' => $this->t('Remove'),
+          '#limit_validation_errors' => [],
+          '#submit' => ['::removeValueSubmit'],
+          '#value_index' => $index,
+          '#ajax' => [
+            'callback' => '::valuesAjax',
+            'wrapper' => $wrapper_id,
+          ],
+          '#access' => $remove_access,
         ],
-        '#access' => $remove_access,
+        'delete' => [
+          'title' => $this->t('Delete'),
+          'query' => $destination,
+          'url' => $template->urlInfo('delete-form'),
+        ],
       ];
+
+//      $value_form['remove'] = [
+//        '#type' => 'submit',
+//        '#name' => 'remove_value' . $index,
+//        '#value' => $this->t('Remove'),
+//        '#limit_validation_errors' => [],
+//        '#submit' => ['::removeValueSubmit'],
+//        '#value_index' => $index,
+//        '#ajax' => [
+//          'callback' => '::valuesAjax',
+//          'wrapper' => $wrapper_id,
+//        ],
+//        '#access' => $remove_access,
+//      ];
     }
 
     // Sort the values by weight. Ensures weight is preserved on ajax refresh.

@@ -64,8 +64,6 @@ class TemplateContentAddForm extends FormBase {
     $wysiwyg_template = $this->entity;
     $form =  parent::form($form, $form_state);
 
-
-
     $form['label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Title'),

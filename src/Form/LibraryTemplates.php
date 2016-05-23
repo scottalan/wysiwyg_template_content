@@ -3,6 +3,7 @@
 namespace Drupal\wysiwyg_template_content\Form;
 
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Extension\ModuleHandlerInterface;
@@ -121,7 +122,7 @@ class LibraryTemplates extends FormBase {
     $form['templates'] = array(
       '#type' => 'table',
       '#header' => array($this->t('Name'), $this->t('Weight'), $this->t('Operations')),
-      '#empty' => $this->t('No templates available. <a href=":link">Add template</a>.', array(':link' => Url::fromRoute('wysiwyg_template_content.add', array('wysiwyg_template_library' => $library->id())))),
+      '#empty' => $this->t('No templates available. <a href=":link">Add something</a>.', array(':link' => Url::fromRoute('wysiwyg_template_content.add', array('wysiwyg_template_library' => $library->id())))),
       '#attributes' => array(
         'id' => 'wysiwyg_template_content',
       ),

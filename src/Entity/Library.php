@@ -33,8 +33,8 @@ use Drupal\wysiwyg_template_content\LibraryInterface;
  *     "weight" = "weight"
  *   },
  *   links = {
- *     "add-form" = "/admin/wysiwyg-template/libraries/add",
- *     "edit-form" = "/admin/wysiwyg-template/libraries/manage/{wysiwyg_template_library}/edit",
+ *     "add-form" = "/admin/wysiwyg-template/libraries/manage/{wysiwyg_template_library}/add",
+ *     "edit-form" = "/admin/wysiwyg-template/libraries/manage/{wysiwyg_template_library}",
  *     "delete-form" = "/admin/wysiwyg-template/libraries/manage/{wysiwyg_template_library}/delete",
  *     "overview-form" = "/admin/wysiwyg-template/libraries/manage/{wysiwyg_template_library}/overview",
  *     "collection" = "/admin/wysiwyg-template/libraries",

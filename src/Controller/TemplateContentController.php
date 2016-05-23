@@ -8,7 +8,7 @@ namespace Drupal\wysiwyg_template_content\Controller;
 
 use Drupal\node\NodeTypeInterface;
 use Drupal\wysiwyg_template\Controller\TemplateController;
-use Drupal\wysiwyg_template_content\TemplateContentInterface;
+use Drupal\wysiwyg_template_content\Entity\TemplateContent;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -21,7 +21,7 @@ class TemplateContentController extends TemplateController {
       // @todo Support images.
       'imagesPath' => FALSE,
     ];
-    foreach (TemplateContentInterface::loadByNodeType($node_type) as $template) {
+    foreach (TemplateContent::loadByNodeType($node_type) as $template) {
       $json_template = new \stdClass();
       $json_template->title = $template->label();
       // @todo Images.

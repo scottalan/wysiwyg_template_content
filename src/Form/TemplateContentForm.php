@@ -26,58 +26,72 @@ use Drupal\wysiwyg_template\TemplateInterface;
 
 /**
  * Defines a class that builds the Template Form.
- *
- * @package Drupal\wysiwyg_template_content\Form
  */
 class TemplateContentForm extends ContentEntityForm {
 
   /**
+   * The template storage.
+   *
+   * @var \Drupal\Core\Entity\EntityStorageInterface
+   */
+  protected $storage;
+
+  /**
    * TemplateContentForm constructor.
    *
-   * @param EntityManagerInterface $entityManager
+   * @param EntityTypeManagerInterface $entity_type_manager
    */
-  public function __construct(EntityManagerInterface $entityManager) {
-    parent::__construct($entityManager);
+  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
+    parent::__construct($entity_type_manager);
+    $this->storage = $entity_type_manager->getStorage('wysiwyg_template_content');
   }
 
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('entity.manager')
-    );
-  }
+//  public static function create(ContainerInterface $container) {
+//    /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager */
+//    $entity_type_manager = $container->get('entity_type.manager');
+//    return new static($entity_type_manager);
+//  }
 
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state) {
-    // Skip building the form if there are no available stores.
-    $library_query = $this->entityManager->getStorage('wysiwyg_template_library')->getQuery();
-    if ($library_query->count()->execute() == 0) {
-      $link = Link::createFromRoute('Add a new library.', 'entity.wysiwyg_template_content.add_page');
-      $form['warning'] = [
-        '#markup' => t("Templates require a library. @link", ['@link' => $link->toString()]),
-      ];
-      return $form;
-    }
-
-    return parent::buildForm($form, $form_state);
-  }
+//  public function buildForm(array $form, FormStateInterface $form_state) {
+//    // Skip building the form if there are no available stores.
+//    $library_query = $this->entityManager->getStorage('wysiwyg_template_library')->getQuery();
+//    if ($library_query->count()->execute() == 0) {
+//      $link = Link::createFromRoute('Add a new library.', 'entity.wysiwyg_template_content.add_page');
+//      $form['warning'] = [
+//        '#markup' => t("Templates require a library. @link", ['@link' => $link->toString()]),
+//      ];
+//      return $form;
+//    }
+//
+//    return parent::buildForm($form, $form_state);
+//  }
 
   public function form(array $form, FormStateInterface $form_state) {
     $form =  parent::form($form, $form_state);
 
-    /* @var \Drupal\wysiwyg_template_content\TemplateContentInterface $wysiwyg_template */
+    /* @var \Drupal\wysiwyg_template_content\Entity\TemplateContent $wysiwyg_template */
     $wysiwyg_template = $this->entity;
 
     $library_storage = $this->entityManager->getStorage('wysiwyg_template_library');
     $library = $library_storage->load($wysiwyg_template->bundle());
 
-    $parent = array_keys($library_storage->loadParents($wysiwyg_template->id()));
-    $form_state->set(['wysiwyg_template_content', 'parent'], $parent);
     $form_state->set(['wysiwyg_template_content', 'wysiwyg_template_library'], $library);
+
+    $form['library'] = [
+      '#type' => 'entity_autocomplete',
+      '#title' => t('Find a library'),
+      '#target_type' => 'wysiwyg_template_library',
+      '#selection_settings' => [
+        'match_operator' => 'CONTAINS',
+      ],
+      '#required' => TRUE,
+    ];
 
     $form['label'] = [
       '#type' => 'textfield',
@@ -149,7 +163,7 @@ class TemplateContentForm extends ContentEntityForm {
     $template->setName(trim($template->getName()));
 
     // Assign parents with proper delta values starting from 0.
-    $template->parent = array_keys($form_state->getValue('parent'));
+//    $template->parent = array_keys($form_state->getValue('parent'));
 
     return $template;
   }
@@ -161,7 +175,7 @@ class TemplateContentForm extends ContentEntityForm {
     /** @var \Drupal\wysiwyg_template_content\TemplateContentInterface $template */
     $wysiwyg_template = $this->getEntity();
 
-    $form_state->setRedirect('entity.wysiwyg_template_content.collection');
+    $form_state->setRedirect('entity.wysiwyg_template_library.collection');
     $status = $wysiwyg_template->save();
 
     switch ($status) {
@@ -178,13 +192,11 @@ class TemplateContentForm extends ContentEntityForm {
         break;
     }
 
-    $current_parent_count = count($form_state->getValue('parent'));
-    $previous_parent_count = count($form_state->get(['taxonomy', 'parent']));
-    // Root doesn't count if it's the only parent.
-    if ($current_parent_count == 1 && $form_state->hasValue(array('parent', 0))) {
-      $current_parent_count = 0;
-      $form_state->setValue('parent', array());
+    if ($form_state->hasValue(['wysiwyg_template_content', 'wysiwyg_template_library'])) {
+      $yes = TRUE;
     }
+    $library_value1 = $form_state->getValue('library_id');
+    $library_value = $form_state->get(['wysiwyg_template_content', 'wysiwyg_template_library']);
 
     $form_state->setValue('template_id', $this->entity->id());
     $form_state->set('template_id', $this->entity->id());

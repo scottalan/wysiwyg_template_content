@@ -59,13 +59,27 @@ use Drupal\wysiwyg_template_content\TemplateContentInterface;
  */
 class TemplateContent extends ContentEntityBase implements TemplateContentInterface {
 
-//  use EntityChangedTrait;
+  use EntityChangedTrait;
 
   /**
    * {@inheritdoc}
    */
   public function id() {
     return $this->get('template_id')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLibrary() {
+    return $this->get('library_id')->entity;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getLibraryId() {
+    return $this->get('library_id')->target_id;
   }
 
   /**
@@ -138,13 +152,6 @@ class TemplateContent extends ContentEntityBase implements TemplateContentInterf
   public function setWeight($weight) {
     $this->set('weight', $weight);
     return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getLibraryId() {
-    return $this->get('library_id')->target_id;
   }
 
   /**

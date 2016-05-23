@@ -6,6 +6,7 @@ use Drupal\Core\Entity\BundleEntityFormBase;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Config\Entity\ConfigEntityStorageInterface;
 use Drupal\Core\Link;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -17,18 +18,33 @@ class LibraryForm extends BundleEntityFormBase {
   /**
    * The library storage.
    *
+   * @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface
+   */
+  protected $library_storage;
+
+  /**
+   * The template storage.
+   *
+   * @var \Drupal\Core\Entity\ContentEntityStorageBase
+   */
+  protected $template_storage;
+
+  /**
+   * The template storage.
+   *
    * @var \Drupal\Core\Entity\EntityStorageInterface
    */
-  protected $libraryStorage;
+  protected $storage;
 
   /**
    * Constructs a new library form.
    *
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface
+   * @param \Drupal\Core\Config\Entity\ConfigEntityStorageInterface $library_storage
    *   The library storage.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
-    $this->libraryStorage = $entity_type_manager->getStorage('wysiwyg_template_library');
+  public function __construct(ConfigEntityStorageInterface $library_storage, EntityTypeManagerInterface $entity_type_manager) {
+    $this->library_storage = $library_storage;
+    $this->template_storage = $entity_type_manager->getStorage('wysiwyg_template_content');
   }
 
   /**
@@ -36,8 +52,28 @@ class LibraryForm extends BundleEntityFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity_type.manager')->getStorage('wysiwyg_template_library')
+      $container->get('entity.manager')->getStorage('wysiwyg_template_library'),
+      $container->get('entity_type.manager')
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildForm(array $form, FormStateInterface $form_state) {
+    $form = parent::buildForm($form, $form_state);
+
+    $form['#title'] = $this->getQuestion();
+
+    $form['#attributes']['class'][] = 'confirmation';
+    $form['description'] = array('#markup' => $this->getDescription());
+    $form[$this->getFormName()] = array('#type' => 'hidden', '#value' => 1);
+
+    // By default, render the form using theme_confirm_form().
+    if (!isset($form['#theme'])) {
+      $form['#theme'] = 'confirm_form';
+    }
+    return $form;
   }
 
   /**
