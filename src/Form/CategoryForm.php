@@ -11,16 +11,16 @@ use Drupal\Core\Link;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Base form for vocabulary edit forms.
+ * Base form for category forms.
  */
-class LibraryForm extends BundleEntityFormBase {
+class CategoryForm extends BundleEntityFormBase {
 
   /**
-   * The library storage.
+   * The category storage.
    *
    * @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface
    */
-  protected $library_storage;
+  protected $category_storage;
 
   /**
    * The template storage.
@@ -37,13 +37,13 @@ class LibraryForm extends BundleEntityFormBase {
   protected $storage;
 
   /**
-   * Constructs a new library form.
+   * Constructs a new category form.
    *
-   * @param \Drupal\Core\Config\Entity\ConfigEntityStorageInterface $library_storage
-   *   The library storage.
+   * @param \Drupal\Core\Config\Entity\ConfigEntityStorageInterface $category_storage
+   *   The category storage.
    */
-  public function __construct(ConfigEntityStorageInterface $library_storage, EntityTypeManagerInterface $entity_type_manager) {
-    $this->library_storage = $library_storage;
+  public function __construct(ConfigEntityStorageInterface $category_storage, EntityTypeManagerInterface $entity_type_manager) {
+    $this->category_storage = $category_storage;
     $this->template_storage = $entity_type_manager->getStorage('wysiwyg_template_content');
   }
 
@@ -52,7 +52,7 @@ class LibraryForm extends BundleEntityFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity.manager')->getStorage('wysiwyg_template_library'),
+      $container->get('entity.manager')->getStorage('wysiwyg_template_category'),
       $container->get('entity_type.manager')
     );
   }
@@ -80,13 +80,13 @@ class LibraryForm extends BundleEntityFormBase {
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state) {
-    /** @var \Drupal\wysiwyg_template_content\LibraryInterface $library */
-    $library = $this->entity;
-    if ($library->isNew()) {
-      $form['#title'] = $this->t('Add library');
+    /** @var \Drupal\wysiwyg_template_content\CategoryInterface $category */
+    $category = $this->entity;
+    if ($category->isNew()) {
+      $form['#title'] = $this->t('Add category');
     }
     else {
-      $form['#title'] = $this->t('Edit library');
+      $form['#title'] = $this->t('Edit category');
     }
 
     $form['name'] = array(
@@ -94,23 +94,23 @@ class LibraryForm extends BundleEntityFormBase {
       '#title' => $this->t('Name'),
       '#maxlength' => 255,
       '#required' => TRUE,
-      '#default_value' => $library->label(),
+      '#default_value' => $category->label(),
     );
 
-    $form['library_id'] = array(
+    $form['category_id'] = array(
       '#type' => 'machine_name',
       '#maxlength' => EntityTypeInterface::BUNDLE_MAX_LENGTH,
       '#machine_name' => array(
         'exists' => array($this, 'exists'),
         'source' => array('name'),
       ),
-      '#default_value' => $library->id(),
+      '#default_value' => $category->id(),
     );
 
     $form['description'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Description'),
-      '#default_value' => $library->getDescription(),
+      '#default_value' => $category->getDescription(),
     );
 
     $form = parent::form($form, $form_state);
@@ -122,34 +122,34 @@ class LibraryForm extends BundleEntityFormBase {
    */
   public function save(array $form, FormStateInterface $form_state) {
     $status = $this->entity->save();
-    $library = $this->entity;
+    $category = $this->entity;
 
-    $edit_link = $library->toUrl('edit-form')->toString();
+    $edit_link = $category->toUrl('edit-form')->toString();
     switch ($status) {
       case SAVED_NEW:
-        drupal_set_message($this->t('Created new library %name.', array('%name' => $library->label())));
-        $this->logger('wysiwyg_template_library')->notice('Created new library %name.', array('%name' => $library->label(), 'link' => $edit_link));
+        drupal_set_message($this->t('Created new category %name.', array('%name' => $category->label())));
+        $this->logger('wysiwyg_template_category')->notice('Created new category %name.', array('%name' => $category->label(), 'link' => $edit_link));
         break;
 
       case SAVED_UPDATED:
-        drupal_set_message($this->t('Updated library %name.', array('%name' => $library->label())));
-        $this->logger('wysiwyg_template_library')->notice('Updated library %name.', array('%name' => $library->label(), 'link' => $edit_link));
+        drupal_set_message($this->t('Updated category %name.', array('%name' => $category->label())));
+        $this->logger('wysiwyg_template_category')->notice('Updated category %name.', array('%name' => $category->label(), 'link' => $edit_link));
         break;
     }
 
-//    $form_state->setRedirectUrl($library->toUrl('collection'));
-    $form_state->setValue('library_id', $library->id());
-    $form_state->set('library_id', $library->id());
+//    $form_state->setRedirectUrl($category->toUrl('collection'));
+    $form_state->setValue('category_id', $category->id());
+    $form_state->set('category_id', $category->id());
   }
 
 //  public function buildForm(array $form, FormStateInterface $form_state) {
 //    $form = parent::buildForm($form, $form_state);
-//    $library = $this->entity;
-//    if ($library->isNew()) {
-//      $form['#title'] = $this->t('Add library');
+//    $category = $this->entity;
+//    if ($category->isNew()) {
+//      $form['#title'] = $this->t('Add category');
 //    }
 //    else {
-//      $form['#title'] = $this->t('Edit library');
+//      $form['#title'] = $this->t('Edit category');
 //    }
 //
 //    $form['name'] = array(
@@ -157,23 +157,23 @@ class LibraryForm extends BundleEntityFormBase {
 //      '#title' => $this->t('Name'),
 //      '#maxlength' => 255,
 //      '#required' => TRUE,
-//      '#default_value' => $library->label(),
+//      '#default_value' => $category->label(),
 //    );
 //
-//    $form['library_id'] = array(
+//    $form['category_id'] = array(
 //      '#type' => 'machine_name',
 //      '#maxlength' => EntityTypeInterface::BUNDLE_MAX_LENGTH,
 //      '#machine_name' => array(
 //        'exists' => array($this, 'exists'),
 //        'source' => array('name'),
 //      ),
-//      '#default_value' => $library->id(),
+//      '#default_value' => $category->id(),
 //    );
 //
 //    $form['description'] = array(
 //      '#type' => 'textfield',
 //      '#title' => $this->t('Description'),
-//      '#default_value' => $library->getDescription(),
+//      '#default_value' => $category->getDescription(),
 //    );
 //
 //    return $this->protectBundleIdElement($form);
@@ -181,36 +181,36 @@ class LibraryForm extends BundleEntityFormBase {
 
 //  public function submitForm(array &$form, FormStateInterface $form_state) {
 //    $status = $this->entity->save();
-//    $library = $this->entity;
+//    $category = $this->entity;
 //
-//    $edit_link = $library->toUrl('edit-form')->toString();
+//    $edit_link = $category->toUrl('edit-form')->toString();
 //    switch ($status) {
 //      case SAVED_NEW:
-//        drupal_set_message($this->t('Created new library %name.', array('%name' => $library->label())));
-//        $this->logger('wysiwyg_template_library')->notice('Created new library %name.', array('%name' => $library->label(), 'link' => $edit_link));
+//        drupal_set_message($this->t('Created new category %name.', array('%name' => $category->label())));
+//        $this->logger('wysiwyg_template_category')->notice('Created new category %name.', array('%name' => $category->label(), 'link' => $edit_link));
 //        break;
 //
 //      case SAVED_UPDATED:
-//        drupal_set_message($this->t('Updated library %name.', array('%name' => $library->label())));
-//        $this->logger('wysiwyg_template_library')->notice('Updated library %name.', array('%name' => $library->label(), 'link' => $edit_link));
+//        drupal_set_message($this->t('Updated category %name.', array('%name' => $category->label())));
+//        $this->logger('wysiwyg_template_category')->notice('Updated category %name.', array('%name' => $category->label(), 'link' => $edit_link));
 //        break;
 //    }
 //
-//    $form_state->setRedirectUrl($library->toUrl('collection'));
+//    $form_state->setRedirectUrl($category->toUrl('collection'));
 //    parent::submitForm($form, $form_state);
 //  }
 
   /**
-   * Determines if the library already exists.
+   * Determines if the category already exists.
    *
-   * @param string $library_id
-   *   The library ID.
+   * @param string $category_id
+   *   The category ID.
    *
    * @return bool
-   *   TRUE if the library exists, FALSE otherwise.
+   *   TRUE if the category exists, FALSE otherwise.
    */
-  public function exists($library_id) {
-    $action = $this->libraryStorage->load($library_id);
+  public function exists($category_id) {
+    $action = $this->categoryStorage->load($category_id);
     return !empty($action);
   }
 

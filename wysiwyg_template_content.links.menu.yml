@@ -11,8 +11,8 @@ entity.wysiwyg_template_content.collection:
   parent: 'wysiwyg_template_content.admin_wysiwyg_template_content'
   description: 'Manage templates.'
 
-entity.wysiwyg_template_library.collection:
-  title: 'Libraries'
-  route_name: 'entity.wysiwyg_template_library.collection'
+entity.wysiwyg_template_category.collection:
+  title: 'Categories'
+  route_name: 'entity.wysiwyg_template_category.collection'
   parent: 'wysiwyg_template_content.admin_wysiwyg_template_content'
-  description: 'Manage libraries.'
+  description: 'Manage categories.'

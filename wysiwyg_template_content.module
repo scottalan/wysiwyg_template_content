@@ -10,9 +10,9 @@ use Drupal\Core\Url;
 use Drupal\node\NodeTypeInterface;
 use Drupal\node\Entity\NodeType;
 use Drupal\wysiwyg_template_content\Entity\TemplateContent;
-use Drupal\wysiwyg_template_content\Entity\Library;
+use Drupal\wysiwyg_template_content\Entity\Category;
 use Drupal\wysiwyg_template_content\TemplateContentInterface;
-use Drupal\wysiwyg_template_content\LibraryInterface;
+use Drupal\wysiwyg_template_content\CategoryInterface;
 
 /**
  * Implements hook_editor_js_settings_alter().
@@ -95,12 +95,12 @@ function wysiwyg_template_content_load_multiple(array $tids = NULL) {
   return \Drupal\wysiwyg_template_content\Entity\TemplateContent::loadMultiple($tids);
 }
 
-function wysiwyg_template_content_libary_load($lid) {
-  return \Drupal\wysiwyg_template_content\Entity\Library::load($lid);
+function wysiwyg_template_content_category_load($lid) {
+  return \Drupal\wysiwyg_template_content\Entity\Category::load($lid);
 }
 
-function wysiwyg_template_content_libary_load_multiple(array $lids = NULL) {
-  return \Drupal\wysiwyg_template_content\Entity\Library::loadMultiple($lids);
+function wysiwyg_template_content_category_load_multiple(array $lids = NULL) {
+  return \Drupal\wysiwyg_template_content\Entity\Category::loadMultiple($lids);
 }
 
 function wysiwyg_template_content_title(TemplateContent $template) {
@@ -108,19 +108,19 @@ function wysiwyg_template_content_title(TemplateContent $template) {
 }
 
 /**
- * Get the names of all libraries.
+ * Get the names of all categories.
  *
  * @return array
- *   A list of existing library IDs.
+ *   A list of existing category IDs.
  */
-function wysiwyg_template_library_get_names() {
+function wysiwyg_template_category_get_names() {
   $names = &drupal_static(__FUNCTION__);
 
   if (!isset($names)) {
     $names = array();
-    $config_names = \Drupal::configFactory()->listAll('wysiwyg_template_content.library.');
+    $config_names = \Drupal::configFactory()->listAll('wysiwyg_template_content.category.');
     foreach ($config_names as $config_name) {
-      $id = substr($config_name, strlen('wysiwyg_template_content.library.'));
+      $id = substr($config_name, strlen('wysiwyg_template_content.category.'));
       $names[$id] = $id;
     }
   }

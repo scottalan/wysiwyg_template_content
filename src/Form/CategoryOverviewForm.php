@@ -9,14 +9,14 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Routing\CurrentRouteMatch;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class LibraryOverviewForm extends FormBase {
+class CategoryOverviewForm extends FormBase {
 
   /**
-   * The current template library.
+   * The current template category.
    *
-   * @var \Drupal\wysiwyg_template_content\LibraryInterface
+   * @var \Drupal\wysiwyg_template_content\CategoryInterface
    */
-  protected $library;
+  protected $category;
 
   /**
    * The entity type manager.
@@ -29,11 +29,11 @@ class LibraryOverviewForm extends FormBase {
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'wysiwyg_template_library_overview';
+    return 'wysiwyg_template_category_overview';
   }
 
   /**
-   * Constructs a new LibraryOverviewForm object.
+   * Constructs a new CategoryOverviewForm object.
    *
    * @param \Drupal\Core\Routing\CurrentRouteMatch $current_route_match
    *   The current route match.
@@ -41,7 +41,7 @@ class LibraryOverviewForm extends FormBase {
    *   The entity type manager.
    */
   public function __construct(CurrentRouteMatch $current_route_match, EntityTypeManagerInterface $entity_type_manager) {
-    $this->library = $current_route_match->getParameter('wysiwyg_template_library');
+    $this->category = $current_route_match->getParameter('wysiwyg_template_category');
     $this->entityTypeManager = $entity_type_manager;
   }
 
@@ -60,7 +60,7 @@ class LibraryOverviewForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $user_input = $form_state->getUserInput();
-    $values = $this->library->getValues();
+    $values = $this->category->getValues();
     // The value map allows new values to be added and removed before saving.
     // An array in the $index => $id format. $id is '_new' for unsaved values.
     $value_map = (array) $form_state->get('value_map');
@@ -68,14 +68,14 @@ class LibraryOverviewForm extends FormBase {
       $value_map = $values ? array_keys($values) : ['_new'];
       $form_state->set('value_map', $value_map);
     }
-    // Set the form title to that of the library.
-    $form['#title'] = $this->library->label();
+    // Set the form title to that of the category.
+    $form['#title'] = $this->category->label();
 
     if (empty($values)) {
 
     }
 
-    $wrapper_id = Html::getUniqueId('wysiwyg-template-library-values-ajax-wrapper');
+    $wrapper_id = Html::getUniqueId('wysiwyg-template-category-values-ajax-wrapper');
     $form['values'] = [
       '#type' => 'table',
       '#header' => [
@@ -83,12 +83,12 @@ class LibraryOverviewForm extends FormBase {
         $this->t('Weight'),
         $this->t('Operations'),
       ],
-      '#empty' => $this->t('No templates available. <a href=":link">Add a template to this library</a>.', array(':link' => $this->url('entity.wysiwyg_template_content.add_form', array('wysiwyg_template_library' => $this->library->id())))),
+      '#empty' => $this->t('No templates available. <a href=":link">Add a template to this category</a>.', array(':link' => $this->url('entity.wysiwyg_template_content.add_form', array('wysiwyg_template_category' => $this->category->id())))),
       '#tabledrag' => [
         [
           'action' => 'order',
           'relationship' => 'sibling',
-          'group' => 'wysiwyg-template-library-value-order-weight',
+          'group' => 'wysiwyg-template-category-value-order-weight',
         ],
       ],
       '#weight' => 5,
@@ -135,7 +135,7 @@ class LibraryOverviewForm extends FormBase {
         '#delta' => $max_weight,
         '#default_value' => $default_weight,
         '#attributes' => [
-          'class' => ['wysiwyg-template-library-value-order-weight'],
+          'class' => ['wysiwyg-template-category-value-order-weight'],
         ],
       ];
       // Used by SortArray::sortByWeightProperty to sort the rows.
@@ -189,7 +189,7 @@ class LibraryOverviewForm extends FormBase {
     uasort($form['values'], ['\Drupal\Component\Utility\SortArray', 'sortByWeightProperty']);
 
     $access_handler = $this->entityTypeManager->getAccessControlHandler('wysiwyg_template_content');
-    if ($access_handler->createAccess($this->library->id())) {
+    if ($access_handler->createAccess($this->category->id())) {
       $form['values']['_add_new'] = [
         '#tree' => FALSE,
       ];
@@ -202,7 +202,7 @@ class LibraryOverviewForm extends FormBase {
           'callback' => '::valuesAjax',
           'wrapper' => $wrapper_id,
         ],
-        '#prefix' => '<div class="wysiwyg-template-library-value-new">',
+        '#prefix' => '<div class="wysiwyg-template-category-value-new">',
         '#suffix' => '</div>',
       ];
       $form['values']['_add_new']['weight'] = [
@@ -281,14 +281,14 @@ class LibraryOverviewForm extends FormBase {
       $template->save();
     }
 
-    drupal_set_message($this->t('Saved the @library library values.', ['@library' => $this->library->label()]));
+    drupal_set_message($this->t('Saved the @category category values.', ['@category' => $this->category->label()]));
   }
 
   /**
    * Redirects to the confirmation form for the reset action.
    */
   public function submitReset(array &$form, FormStateInterface $form_state) {
-    $form_state->setRedirectUrl($this->library->toUrl('reset-form'));
+    $form_state->setRedirectUrl($this->category->toUrl('reset-form'));
   }
 
 }

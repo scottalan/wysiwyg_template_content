@@ -5,17 +5,17 @@ namespace Drupal\wysiwyg_template_content;
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
-use Drupal\wysiwyg_template_content\LibraryInterface;
+use Drupal\wysiwyg_template_content\CategoryInterface;
 
 /**
- * Defines a class to build a list of template library entities.
+ * Defines a class to build a list of template category entities.
  */
-class LibraryListBuilder extends ConfigEntityListBuilder {
+class CategoryListBuilder extends ConfigEntityListBuilder {
 
   /**
-   * @var \Drupal\wysiwyg_template_content\LibraryInterface
+   * @var \Drupal\wysiwyg_template_content\CategoryInterface
    */
-  protected $library;
+  protected $category;
 
   /**
    * @var \Drupal\wysiwyg_template_content\TemplateContentInterface
@@ -31,7 +31,7 @@ class LibraryListBuilder extends ConfigEntityListBuilder {
     $operations['add'] = array(
       'title' => t('Add template'),
       'weight' => 10,
-      'url' => $entity->toUrl('add-form', ['wysiwyg_template_library' => $entity->id()]),
+      'url' => $entity->toUrl('add-form', ['wysiwyg_template_category' => $entity->id()]),
     );
     // @todo: If no templates don't show.
     $operations['list'] = [
@@ -40,10 +40,10 @@ class LibraryListBuilder extends ConfigEntityListBuilder {
       'url' => $entity->toUrl('overview-form'),
     ];
     if (isset($operations['edit'])) {
-      $operations['edit']['title'] = t('Edit library');
+      $operations['edit']['title'] = t('Edit category');
     }
     if (isset($operations['delete'])) {
-      $operations['delete']['title'] = t('Delete library');
+      $operations['delete']['title'] = t('Delete category');
     }
 
     return $operations;
@@ -53,7 +53,7 @@ class LibraryListBuilder extends ConfigEntityListBuilder {
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $header['label'] = $this->t('Library');
+    $header['label'] = $this->t('Category');
     $header['id'] = $this->t('Id');
     $header['description'] = $this->t('Description');
     return $header + parent::buildHeader();

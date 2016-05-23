@@ -48,15 +48,15 @@ class TemplateContentPermissions implements ContainerInjectionInterface {
    */
   public function permissions() {
     $permissions = [];
-    foreach ($this->entityManager->getStorage('wysiwyg_template_library')->loadMultiple() as $library) {
+    foreach ($this->entityManager->getStorage('wysiwyg_template_category')->loadMultiple() as $category) {
       $permissions += [
-        'edit templates in ' . $library->id() => [
-          'title' => $this->t('Edit templates in %library', ['%library' => $library->label()]),
+        'edit templates in ' . $category->id() => [
+          'title' => $this->t('Edit templates in %category', ['%category' => $category->label()]),
         ],
       ];
       $permissions += [
-        'delete templates in ' . $library->id() => [
-          'title' => $this->t('Delete templates from %library', ['%library' => $library->label()]),
+        'delete templates in ' . $category->id() => [
+          'title' => $this->t('Delete templates from %category', ['%category' => $category->label()]),
         ],
       ];
     }

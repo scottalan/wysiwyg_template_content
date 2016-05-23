@@ -1,5 +1,5 @@
 name: 'Wysiwyg Template Content'
-description: 'Categorize WYSIWYG templates into libraries'
+description: 'Place WYSIWYG templates into categories'
 core: 8.x
 package: 'User interface'
 type: module

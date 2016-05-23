@@ -9,14 +9,14 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use \Drupal\Core\Url;
-use Drupal\wysiwyg_template_content\LibraryInterface;
+use Drupal\wysiwyg_template_content\CategoryInterface;
 use Drupal\wysiwyg_template_content\TemplateContentStorage;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Provides a templates listing form for a libraries.
+ * Provides a templates listing form for categories.
  */
-class LibraryTemplates extends FormBase {
+class CategoryTemplates extends FormBase {
 
   /**
    * The module handler service.
@@ -33,7 +33,7 @@ class LibraryTemplates extends FormBase {
   protected $storageController;
 
   /**
-   * Constructs a Library Template Content object.
+   * Constructs a Category Template Content object.
    *
    * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
    *   The module handler service.
@@ -60,14 +60,14 @@ class LibraryTemplates extends FormBase {
    * {@inheritdoc}
    */
   public function getFormId() {
-    return 'wysiwyg_template_content_library_templates';
+    return 'wysiwyg_template_content_category_templates';
   }
 
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, FormStateInterface $form_state, LibraryInterface $library = NULL) {
-    $form_state->set(['wysiwyg_template_content', 'wysiwyg_template_library'], $library);
+  public function buildForm(array $form, FormStateInterface $form_state, CategoryInterface $category = NULL) {
+    $form_state->set(['wysiwyg_template_content', 'wysiwyg_template_category'], $category);
 
     $entries = 0;
 
@@ -76,7 +76,7 @@ class LibraryTemplates extends FormBase {
 
     $delta = 0;
     $template_deltas = array();
-    $tree = $this->storageController->loadLibraryTemplates($library->id());
+    $tree = $this->storageController->loadCategoryTemplates($category->id());
     $index = 0;
     do {
       // In case this tree is completely empty.
@@ -122,7 +122,7 @@ class LibraryTemplates extends FormBase {
     $form['templates'] = array(
       '#type' => 'table',
       '#header' => array($this->t('Name'), $this->t('Weight'), $this->t('Operations')),
-      '#empty' => $this->t('No templates available. <a href=":link">Add something</a>.', array(':link' => Url::fromRoute('wysiwyg_template_content.add', array('wysiwyg_template_library' => $library->id())))),
+      '#empty' => $this->t('No templates available. <a href=":link">Add something</a>.', array(':link' => Url::fromRoute('wysiwyg_template_content.add', array('wysiwyg_template_category' => $category->id())))),
       '#attributes' => array(
         'id' => 'wysiwyg_template_content',
       ),

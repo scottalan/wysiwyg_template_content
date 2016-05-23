@@ -10,7 +10,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides the confirmation form for resetting template ordering.
  */
-class LibraryResetForm extends EntityConfirmFormBase {
+class CategoryResetForm extends EntityConfirmFormBase {
 
   /**
    * The template storage.
@@ -20,7 +20,7 @@ class LibraryResetForm extends EntityConfirmFormBase {
   protected $templateStorage;
 
   /**
-   * Constructs a new LibraryResetForm object.
+   * Constructs a new CategoryResetForm object.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The attribute storage.
@@ -54,7 +54,7 @@ class LibraryResetForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return $this->t('Are you sure you want to reset the @library template values to alphabetical order?', ['@library' => $this->entity->label()]);
+    return $this->t('Are you sure you want to reset the @category template values to alphabetical order?', ['@category' => $this->entity->label()]);
   }
 
   /**
