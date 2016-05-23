@@ -10,6 +10,13 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
 interface LibraryInterface extends ConfigEntityInterface {
 
   /**
+   * Gets the library values.
+   *
+   * @return \Drupal\wysiwyg_template_content\LibraryInterface[]
+   */
+  public function getValues();
+
+  /**
    * Returns the library description.
    *
    * @return string

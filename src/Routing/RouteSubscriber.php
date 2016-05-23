@@ -19,12 +19,12 @@ class RouteSubscriber extends RouteSubscriberBase {
   public function alterRoutes(RouteCollection $collection) {
 
     if ($collection) {
-//      if ($route = $collection->get('entity.wysiwyg_template_content.add_page')) {
-//        $route->setPath('/admin/config/content/wysiwyg-templates/add');
-//      }
-//      if ($route = $collection->get('entity.wysiwyg_template.collection')) {
-//        $route->setPath('/admin/wysiwyg-template/config/libraries');
-//      }
+      if ($route = $collection->get('wysiwyg_template.list_js')) {
+        $route->setDefault('_controller', '\Drupal\wysiwyg_template_content\Controller\TemplateContentController::listJson');
+      }
+      if ($route = $collection->get('wysiwyg_template.list_js.type')) {
+        $route->setDefault('_controller', '\Drupal\wysiwyg_template_content\Controller\TemplateContentController::listJson');
+      }
     }
 
     // Override the routes in wysiwyg_template.

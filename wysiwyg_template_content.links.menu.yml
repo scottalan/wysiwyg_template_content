@@ -5,13 +5,6 @@ wysiwyg_template_content.admin_wysiwyg_template_content:
   description: 'Administer HTML Templates.'
   weight: -9
 
-wysiwyg_template_content.configuration:
-  title: 'Configuration'
-  route_name: 'wysiwyg_template_content.configuration'
-  parent: 'wysiwyg_template_content.admin_wysiwyg_template_content'
-  description: 'Configure things...'
-  weight: 10
-
 entity.wysiwyg_template_content.collection:
   title: 'Templates'
   route_name: 'entity.wysiwyg_template_content.collection'
@@ -21,5 +14,5 @@ entity.wysiwyg_template_content.collection:
 entity.wysiwyg_template_library.collection:
   title: 'Libraries'
   route_name: 'entity.wysiwyg_template_library.collection'
-  parent: 'wysiwyg_template_content.configuration'
+  parent: 'wysiwyg_template_content.admin_wysiwyg_template_content'
   description: 'Manage libraries.'

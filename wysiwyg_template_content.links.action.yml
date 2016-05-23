@@ -9,4 +9,3 @@ entity.wysiwyg_template_library.add_form:
   title: 'Create a Library'
   appears_on:
     - entity.wysiwyg_template_library.collection
-#    - entity.wysiwyg_template_content.add_page

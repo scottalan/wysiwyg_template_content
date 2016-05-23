@@ -36,12 +36,15 @@ class LibraryForm extends BundleEntityFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager')->getStorage('wysiwyg_template_library')
     );
   }
 
-  public function buildForm(array $form, FormStateInterface $form_state) {
-    $form = parent::buildForm($form, $form_state);
+  /**
+   * {@inheritdoc}
+   */
+  public function form(array $form, FormStateInterface $form_state) {
+    /** @var \Drupal\wysiwyg_template_content\LibraryInterface $library */
     $library = $this->entity;
     if ($library->isNew()) {
       $form['#title'] = $this->t('Add library');
@@ -74,14 +77,37 @@ class LibraryForm extends BundleEntityFormBase {
       '#default_value' => $library->getDescription(),
     );
 
+    $form = parent::form($form, $form_state);
     return $this->protectBundleIdElement($form);
   }
 
   /**
    * {@inheritdoc}
    */
-//  public function form(array $form, FormStateInterface $form_state) {
-//    $form = parent::form($form, $form_state);
+  public function save(array $form, FormStateInterface $form_state) {
+    $status = $this->entity->save();
+    $library = $this->entity;
+
+    $edit_link = $library->toUrl('edit-form')->toString();
+    switch ($status) {
+      case SAVED_NEW:
+        drupal_set_message($this->t('Created new library %name.', array('%name' => $library->label())));
+        $this->logger('wysiwyg_template_library')->notice('Created new library %name.', array('%name' => $library->label(), 'link' => $edit_link));
+        break;
+
+      case SAVED_UPDATED:
+        drupal_set_message($this->t('Updated library %name.', array('%name' => $library->label())));
+        $this->logger('wysiwyg_template_library')->notice('Updated library %name.', array('%name' => $library->label(), 'link' => $edit_link));
+        break;
+    }
+
+//    $form_state->setRedirectUrl($library->toUrl('collection'));
+    $form_state->setValue('library_id', $library->id());
+    $form_state->set('library_id', $library->id());
+  }
+
+//  public function buildForm(array $form, FormStateInterface $form_state) {
+//    $form = parent::buildForm($form, $form_state);
 //    $library = $this->entity;
 //    if ($library->isNew()) {
 //      $form['#title'] = $this->t('Add library');
@@ -117,31 +143,7 @@ class LibraryForm extends BundleEntityFormBase {
 //    return $this->protectBundleIdElement($form);
 //  }
 
-  public function submitForm(array &$form, FormStateInterface $form_state) {
-    $status = $this->entity->save();
-    $library = $this->entity;
-
-    $edit_link = $library->toUrl('edit-form')->toString();
-    switch ($status) {
-      case SAVED_NEW:
-        drupal_set_message($this->t('Created new library %name.', array('%name' => $library->label())));
-        $this->logger('wysiwyg_template_library')->notice('Created new library %name.', array('%name' => $library->label(), 'link' => $edit_link));
-        break;
-
-      case SAVED_UPDATED:
-        drupal_set_message($this->t('Updated library %name.', array('%name' => $library->label())));
-        $this->logger('wysiwyg_template_library')->notice('Updated library %name.', array('%name' => $library->label(), 'link' => $edit_link));
-        break;
-    }
-
-    $form_state->setRedirectUrl($library->toUrl('collection'));
-    parent::submitForm($form, $form_state);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-//  public function save(array $form, FormStateInterface $form_state) {
+//  public function submitForm(array &$form, FormStateInterface $form_state) {
 //    $status = $this->entity->save();
 //    $library = $this->entity;
 //
@@ -159,8 +161,7 @@ class LibraryForm extends BundleEntityFormBase {
 //    }
 //
 //    $form_state->setRedirectUrl($library->toUrl('collection'));
-////    $form_state->setValue('library_id', $library->id());
-////    $form_state->set('library_id', $library->id());
+//    parent::submitForm($form, $form_state);
 //  }
 
   /**

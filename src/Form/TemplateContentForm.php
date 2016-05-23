@@ -49,11 +49,35 @@ class TemplateContentForm extends ContentEntityForm {
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function buildForm(array $form, FormStateInterface $form_state) {
+    // Skip building the form if there are no available stores.
+    $library_query = $this->entityManager->getStorage('wysiwyg_template_library')->getQuery();
+    if ($library_query->count()->execute() == 0) {
+      $link = Link::createFromRoute('Add a new library.', 'entity.wysiwyg_template_content.add_page');
+      $form['warning'] = [
+        '#markup' => t("Templates require a library. @link", ['@link' => $link->toString()]),
+      ];
+      return $form;
+    }
+
+    return parent::buildForm($form, $form_state);
+  }
+
   public function form(array $form, FormStateInterface $form_state) {
     $form =  parent::form($form, $form_state);
 
     /* @var \Drupal\wysiwyg_template_content\TemplateContentInterface $wysiwyg_template */
     $wysiwyg_template = $this->entity;
+
+    $library_storage = $this->entityManager->getStorage('wysiwyg_template_library');
+    $library = $library_storage->load($wysiwyg_template->bundle());
+
+    $parent = array_keys($library_storage->loadParents($wysiwyg_template->id()));
+    $form_state->set(['wysiwyg_template_content', 'parent'], $parent);
+    $form_state->set(['wysiwyg_template_content', 'wysiwyg_template_library'], $library);
 
     $form['label'] = [
       '#type' => 'textfield',
@@ -68,7 +92,7 @@ class TemplateContentForm extends ContentEntityForm {
       '#type' => 'machine_name',
       '#default_value' => $wysiwyg_template->id(),
       '#machine_name' => array(
-        'exists' => '\Drupal\wysiwyg_template\Entity\Template::load',
+        'exists' => '\Drupal\wysiwyg_template_content\Entity\TemplateContent::load',
       ),
       '#disabled' => !$wysiwyg_template->isNew(),
     ];
@@ -101,7 +125,33 @@ class TemplateContentForm extends ContentEntityForm {
       '#access' => (bool) count($node_types),
       '#options' => $node_types,
     ];
+
+    $form['library_id'] = array(
+      '#type' => 'value',
+      '#value' => $library->id(),
+    );
+
+    $form['template_id'] = array(
+      '#type' => 'value',
+      '#value' => $wysiwyg_template->id(),
+    );
+
     return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildEntity(array $form, FormStateInterface $form_state) {
+    $template = parent::buildEntity($form, $form_state);
+
+    // Prevent leading and trailing spaces in term names.
+    $template->setName(trim($template->getName()));
+
+    // Assign parents with proper delta values starting from 0.
+    $template->parent = array_keys($form_state->getValue('parent'));
+
+    return $template;
   }
 
   /**
@@ -109,23 +159,35 @@ class TemplateContentForm extends ContentEntityForm {
    */
   public function save(array $form, FormStateInterface $form_state) {
     /** @var \Drupal\wysiwyg_template_content\TemplateContentInterface $template */
-//    $entity = $this->getEntity();
+    $wysiwyg_template = $this->getEntity();
 
     $form_state->setRedirect('entity.wysiwyg_template_content.collection');
-    $status = $this->entity->save();
+    $status = $wysiwyg_template->save();
 
     switch ($status) {
       case SAVED_NEW:
         drupal_set_message($this->t('Successfully created the %label template.', [
-          '%label' => $this->entity->label(),
+          '%label' => $wysiwyg_template->label(),
         ]));
         break;
 
-      default:
-        drupal_set_message($this->t('Saved the %label template.', [
-          '%label' => $this->entity->label(),
+      case SAVED_UPDATED:
+        drupal_set_message($this->t('Successfully updated the %label template.', [
+          '%label' => $wysiwyg_template->label(),
         ]));
+        break;
     }
+
+    $current_parent_count = count($form_state->getValue('parent'));
+    $previous_parent_count = count($form_state->get(['taxonomy', 'parent']));
+    // Root doesn't count if it's the only parent.
+    if ($current_parent_count == 1 && $form_state->hasValue(array('parent', 0))) {
+      $current_parent_count = 0;
+      $form_state->setValue('parent', array());
+    }
+
+    $form_state->setValue('template_id', $this->entity->id());
+    $form_state->set('template_id', $this->entity->id());
   }
 
 }

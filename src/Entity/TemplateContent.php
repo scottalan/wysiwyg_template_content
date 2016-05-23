@@ -59,7 +59,14 @@ use Drupal\wysiwyg_template_content\TemplateContentInterface;
  */
 class TemplateContent extends ContentEntityBase implements TemplateContentInterface {
 
-  use EntityChangedTrait;
+//  use EntityChangedTrait;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function id() {
+    return $this->get('template_id')->value;
+  }
 
   /**
    * {@inheritdoc}
@@ -159,6 +166,7 @@ class TemplateContent extends ContentEntityBase implements TemplateContentInterf
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
+    $fields = parent::baseFieldDefinitions($entity_type);
     $fields['template_id'] = BaseFieldDefinition::create('integer')
       ->setLabel(t('Template Content ID'))
       ->setDescription(t('The template ID.'))

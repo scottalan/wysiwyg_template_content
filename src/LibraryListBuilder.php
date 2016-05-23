@@ -4,6 +4,7 @@ namespace Drupal\wysiwyg_template_content;
 
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Url;
 use Drupal\wysiwyg_template_content\LibraryInterface;
 
 /**
@@ -15,6 +16,32 @@ class LibraryListBuilder extends ConfigEntityListBuilder {
    * @var \Drupal\wysiwyg_template_content\LibraryInterface
    */
   protected $library;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getDefaultOperations(EntityInterface $entity) {
+    $operations = parent::getDefaultOperations($entity);
+    $operations['add'] = array(
+      'title' => t('Add template'),
+      'weight' => 10,
+      'url' => Url::fromRoute('entity.wysiwyg_template_content.add_form', ['wysiwyg_template_library' => $entity->id()]),
+    );
+    // @todo: If no templates don't show.
+    $operations['list'] = [
+      'title' => t('Manage templates'),
+      'weight' => 0,
+      'url' => $entity->toUrl('overview-form'),
+    ];
+    if (isset($operations['edit'])) {
+      $operations['edit']['title'] = t('Edit library');
+    }
+    if (isset($operations['delete'])) {
+      $operations['delete']['title'] = t('Delete library');
+    }
+
+    return $operations;
+  }
 
   /**
    * {@inheritdoc}

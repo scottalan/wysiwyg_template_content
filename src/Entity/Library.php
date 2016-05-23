@@ -16,7 +16,8 @@ use Drupal\wysiwyg_template_content\LibraryInterface;
  *     "form" = {
  *       "add" = "Drupal\wysiwyg_template_content\Form\LibraryForm",
  *       "edit" = "Drupal\wysiwyg_template_content\Form\LibraryForm",
- *       "delete" = "Drupal\wysiwyg_template_content\Form\LibraryDeleteForm"
+ *       "delete" = "Drupal\wysiwyg_template_content\Form\LibraryDeleteForm",
+ *       "reset" = "Drupal\wysiwyg_template_content\Form\LibraryResetForm",
  *     },
  *     "route_provider" = {
  *       "default" = "Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider",
@@ -32,10 +33,12 @@ use Drupal\wysiwyg_template_content\LibraryInterface;
  *     "weight" = "weight"
  *   },
  *   links = {
- *     "add-form" = "/admin/wysiwyg-template/config/libraries/add",
- *     "edit-form" = "/admin/wysiwyg-template/config/libraries/{wysiwyg_template_library}/edit",
- *     "delete-form" = "/admin/wysiwyg-template/config/libraries/{wysiwyg_template_library}/delete",
- *     "collection" = "/admin/wysiwyg-template/config/libraries"
+ *     "add-form" = "/admin/wysiwyg-template/libraries/add",
+ *     "edit-form" = "/admin/wysiwyg-template/libraries/manage/{wysiwyg_template_library}/edit",
+ *     "delete-form" = "/admin/wysiwyg-template/libraries/manage/{wysiwyg_template_library}/delete",
+ *     "overview-form" = "/admin/wysiwyg-template/libraries/manage/{wysiwyg_template_library}/overview",
+ *     "collection" = "/admin/wysiwyg-template/libraries",
+ *     "reset-form" = "/admin/wysiwyg-template/libraries/manage/{wysiwyg_template_library}/reset",
  *   },
  *   config_export = {
  *     "name",
@@ -87,6 +90,14 @@ class Library extends ConfigEntityBundleBase implements LibraryInterface {
    */
   public function label() {
     return $this->name;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getValues() {
+    $storage = $this->entityTypeManager()->getStorage('wysiwyg_template_content');
+    return $storage->loadByProperties(['library_id' => $this->id()]);
   }
 
   /**

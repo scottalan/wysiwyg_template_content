@@ -12,3 +12,8 @@ entity.wysiwyg_template_library.edit_form:
   route_name: 'entity.wysiwyg_template_library.edit_form'
   base_route: 'entity.wysiwyg_template_library.edit_form'
   title: 'Edit'
+
+entity.wysiwyg_template_library.overview_form:
+  route_name: 'entity.wysiwyg_template_library.overview_form'
+  base_route: 'entity.wysiwyg_template_library.edit_form'
+  title: 'List templates'
