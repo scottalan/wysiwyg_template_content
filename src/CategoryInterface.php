@@ -10,11 +10,11 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
 interface CategoryInterface extends ConfigEntityInterface {
 
   /**
-   * Gets the category values.
+   * Get the templates in this category.
    *
    * @return \Drupal\wysiwyg_template_content\CategoryInterface[]
    */
-  public function getValues();
+  public function getTemplates();
 
   /**
    * Returns the category description.

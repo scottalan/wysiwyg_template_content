@@ -3,9 +3,3 @@ services:
     class: Drupal\wysiwyg_template_content\Routing\RouteSubscriber
     tags:
       - { name: event_subscriber }
-
-#  access_check.wysiwyg_template_content.add:
-#    class: Drupal\wysiwyg_template_content\Access\TemplateContentAddAccessCheck
-#    arguments: ['@entity.manager']
-#    tags:
-#      - { name: access_check, applies_to: _wysiwyg_template_content_add_access }

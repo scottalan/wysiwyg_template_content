@@ -2,4 +2,4 @@ administer wysiwyg templates:
   title: 'Administer WYSIWYG template content and categories'
 
 permission_callbacks:
-  - Drupal\wysiwyg_template_content\TemplateContentPermissions::permissions
+  - Drupal\wysiwyg_template_content\CategoryTemplatePermissions::permissions

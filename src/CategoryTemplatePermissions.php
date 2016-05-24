@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @see wysiwyg_template_content.permissions.yml
  */
-class TemplateContentPermissions implements ContainerInjectionInterface {
+class CategoryTemplatePermissions implements ContainerInjectionInterface {
 
   use StringTranslationTrait;
 
@@ -24,7 +24,7 @@ class TemplateContentPermissions implements ContainerInjectionInterface {
   protected $entityManager;
 
   /**
-   * Constructs a TemplateContentPermissions instance.
+   * Constructs a CategoryTemplatePermissions instance.
    *
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager.
@@ -50,13 +50,13 @@ class TemplateContentPermissions implements ContainerInjectionInterface {
     $permissions = [];
     foreach ($this->entityManager->getStorage('wysiwyg_template_category')->loadMultiple() as $category) {
       $permissions += [
-        'edit templates in ' . $category->id() => [
-          'title' => $this->t('Edit templates in %category', ['%category' => $category->label()]),
+        'add templates in ' . $category->id() => [
+          'title' => $this->t('Add templates to the %category category', ['%category' => $category->label()]),
         ],
       ];
       $permissions += [
-        'delete templates in ' . $category->id() => [
-          'title' => $this->t('Delete templates from %category', ['%category' => $category->label()]),
+        'edit templates in ' . $category->id() => [
+          'title' => $this->t('Edit templates in the %category category`', ['%category' => $category->label()]),
         ],
       ];
     }

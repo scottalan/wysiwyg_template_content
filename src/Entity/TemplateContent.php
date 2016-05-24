@@ -16,7 +16,7 @@ use Drupal\node\NodeTypeInterface;
 use Drupal\wysiwyg_template_content\TemplateContentInterface;
 
 /**
- * Defines the TemplateContent entity.
+ * Defines the Template Content entity.
  *
  * @ContentEntityType(
  *   id = "wysiwyg_template_content",
@@ -49,11 +49,11 @@ use Drupal\wysiwyg_template_content\TemplateContentInterface;
  *   bundle_entity_type = "wysiwyg_template_category",
  *   field_ui_base_route = "entity.wysiwyg_template_category.edit_form",
  *   links = {
- *     "canonical" = "/admin/wysiwyg-template/templates/{wysiwyg_template_content}",
- *     "edit-form" = "/admin/wysiwyg-template/templates/{wysiwyg_template_content}/edit",
- *     "delete-form" = "/admin/wysiwyg-template/templates/{wysiwyg_template_content}/delete",
- *     "reassign-form" = "/admin/wysiwyg-template/templates/{wysiwyg_template_content}/reassign",
- *     "collection" = "/admin/wysiwyg-template/templates"
+ *     "canonical" = "/admin/template-categories/templates/{wysiwyg_template_content}",
+ *     "edit-form" = "/admin/template-categories/templates/{wysiwyg_template_content}/edit",
+ *     "delete-form" = "/admin/template-categories/templates/{wysiwyg_template_content}/delete",
+ *     "reassign-form" = "/admin/template-categories/templates/{wysiwyg_template_content}/reassign",
+ *     "collection" = "/admin/template-categories/templates"
  *   },
  *   permission_granularity = "bundle"
  * )

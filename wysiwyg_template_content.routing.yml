@@ -1,49 +1,29 @@
-wysiwyg_template_content.admin_wysiwyg_template_content:
-  path: '/admin/wysiwyg-template'
+entity.wysiwyg_template_category.collection:
+  path: '/admin/structure/template-categories'
   defaults:
-    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
-    _title: 'WYSIWYG Template'
+    _entity_list: 'wysiwyg_template_category'
+    _title: 'WYSIWYG Template Categories'
   requirements:
     _permission: 'administer wysiwyg templates'
 
-#entity.wysiwyg_template_content.add_page:
-#  path: '/admin/wysiwyg-template/templates/add'
-#  defaults:
-#    _form: '\Drupal\wysiwyg_template_content\Form\TemplateContentAddForm'
-#    _title: 'Create a new template'
-#  requirements:
-#    _entity_create_access: 'wysiwyg_template_content'
+entity.wysiwyg_template_category.add_form:
+  path: '/admin/structure/template-categories/add'
+  defaults:
+    _entity_form: 'wysiwyg_template_category'
+    _title: 'Add a category'
+  requirements:
+    _entity_create_access: 'wysiwyg_template_category'
 
 entity.wysiwyg_template_content.add_form:
-  path: '/admin/wysiwyg-template/categories/manage/{wysiwyg_template_category}/add'
+  path: '/admin/structure/template-categories/manage/{wysiwyg_template_category}/add'
   defaults:
     _form: '\Drupal\wysiwyg_template_content\Form\TemplateContentForm'
     _title: 'Create a new template'
   requirements:
     _entity_create_access: 'wysiwyg_template_content'
 
-#entity.wysiwyg_template_content.reassign_form:
-#  path: '/admin/wysiwyg-template/templates/{wysiwyg_template_content}/reassign'
-#  defaults:
-#    _form: '\Drupal\wysiwyg_template_content\Form\OrderReassignForm'
-#    _title: 'Reassign template'
-#  options:
-#    parameters:
-#      wysiwyg_template_content:
-#        type: 'entity:wysiwyg_template_content'
-#  requirements:
-#    _permission: 'administer wysiwyg templates'
-
-entity.wysiwyg_template_category.collection:
-  path: '/admin/wysiwyg-template/categories'
-  defaults:
-    _entity_list: 'wysiwyg_template_category'
-    _title: 'Categories'
-  requirements:
-    _permission: 'administer template categories'
-
 entity.wysiwyg_template_category.overview_form:
-  path: '/admin/wysiwyg-template/categories/manage/{wysiwyg_template_category}/overview'
+  path: '/admin/structure/template-categories/manage/{wysiwyg_template_category}/overview'
   defaults:
     _form: '\Drupal\wysiwyg_template_content\Form\CategoryOverviewForm'
     _title: 'List templates'
@@ -53,19 +33,3 @@ entity.wysiwyg_template_category.overview_form:
         type: 'entity:wysiwyg_template_category'
   requirements:
     _permission: 'administer template categories'
-
-entity.wysiwyg_template_category.reset_form:
-  path: '/admin/wysiwyg-template/categories/manage/{wysiwyg_template_category}/reset'
-  defaults:
-    _entity_form: 'wysiwyg_template_category.reset'
-    _title: 'Reset'
-  requirements:
-    _permission: 'administer template categories'
-
-entity.wysiwyg_template_content.collection:
-  path: '/admin/wysiwyg-template/templates'
-  defaults:
-    _entity_list: 'wysiwyg_template_content'
-    _title: 'Templates'
-  requirements:
-    _permission: 'administer wysiwyg templates'

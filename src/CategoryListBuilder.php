@@ -27,16 +27,15 @@ class CategoryListBuilder extends ConfigEntityListBuilder {
    */
   public function getDefaultOperations(EntityInterface $entity) {
     $operations = parent::getDefaultOperations($entity);
-    $template = $this->entityType('wysiwyg_template_content');
     $operations['add'] = array(
-      'title' => t('Add template'),
-      'weight' => 10,
-      'url' => $entity->toUrl('add-form', ['wysiwyg_template_category' => $entity->id()]),
+      'title' => t('Add templates'),
+      'weight' => -10,
+      'url' => Url::fromRoute('entity.wysiwyg_template_content.add_form', ['wysiwyg_template_category' => $entity->id()]),
     );
     // @todo: If no templates don't show.
     $operations['list'] = [
-      'title' => t('Manage templates'),
-      'weight' => 0,
+      'title' => t('List templates'),
+      'weight' => $operations['add']['weight'] + 1,
       'url' => $entity->toUrl('overview-form'),
     ];
     if (isset($operations['edit'])) {

@@ -1,18 +1,5 @@
-wysiwyg_template_content.admin_wysiwyg_template_content:
-  title: 'WYSIWYG Template'
-  route_name: 'wysiwyg_template_content.admin_wysiwyg_template_content'
-  parent: 'system.admin'
-  description: 'Administer HTML Templates.'
-  weight: -9
-
-entity.wysiwyg_template_content.collection:
-  title: 'Templates'
-  route_name: 'entity.wysiwyg_template_content.collection'
-  parent: 'wysiwyg_template_content.admin_wysiwyg_template_content'
-  description: 'Manage templates.'
-
 entity.wysiwyg_template_category.collection:
   title: 'Categories'
+  parent: system.admin_structure
   route_name: 'entity.wysiwyg_template_category.collection'
-  parent: 'wysiwyg_template_content.admin_wysiwyg_template_content'
   description: 'Manage categories.'

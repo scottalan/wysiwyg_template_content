@@ -1,11 +1,5 @@
-#entity.wysiwyg_template_content.add_form:
-#  route_name: entity.wysiwyg_template_content.add_form
-#  title: 'Add a new template'
-#  appears_on:
-#    - entity.wysiwyg_template_category.overview_form
-
 entity.wysiwyg_template_category.add_form:
   route_name: entity.wysiwyg_template_category.add_form
-  title: 'Add Category'
+  title: 'Add a Category'
   appears_on:
     - entity.wysiwyg_template_category.collection

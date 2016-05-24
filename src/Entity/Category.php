@@ -2,20 +2,18 @@
 
 namespace Drupal\wysiwyg_template_content\Entity;
 
-use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\wysiwyg_template_content\CategoryInterface;
 
 /**
- * Defines the taxonomy vocabulary entity.
+ * Defines the WYSIWYG Template Category entity.
  *
  * @ConfigEntityType(
  *   id = "wysiwyg_template_category",
  *   label = @Translation("Category"),
  *   handlers = {
  *     "form" = {
- *       "add" = "Drupal\wysiwyg_template_content\Form\CategoryForm",
- *       "edit" = "Drupal\wysiwyg_template_content\Form\CategoryForm",
+ *       "default" = "Drupal\wysiwyg_template_content\Form\CategoryForm",
  *       "delete" = "Drupal\wysiwyg_template_content\Form\CategoryDeleteForm",
  *       "reset" = "Drupal\wysiwyg_template_content\Form\CategoryResetForm",
  *     },
@@ -33,12 +31,12 @@ use Drupal\wysiwyg_template_content\CategoryInterface;
  *     "weight" = "weight"
  *   },
  *   links = {
- *     "add-form" = "/admin/wysiwyg-template/categories/manage/{wysiwyg_template_category}/add",
- *     "edit-form" = "/admin/wysiwyg-template/categories/manage/{wysiwyg_template_category}",
- *     "delete-form" = "/admin/wysiwyg-template/categories/manage/{wysiwyg_template_category}/delete",
- *     "overview-form" = "/admin/wysiwyg-template/categories/manage/{wysiwyg_template_category}/overview",
- *     "collection" = "/admin/wysiwyg-template/categories",
- *     "reset-form" = "/admin/wysiwyg-template/categories/manage/{wysiwyg_template_category}/reset",
+ *     "add-form" = "/admin/structure/template-categories/manage/{wysiwyg_template_category}/add",
+ *     "edit-form" = "/admin/structure/template-categories/manage/{wysiwyg_template_category}",
+ *     "delete-form" = "/admin/structure/template-categories/manage/{wysiwyg_template_category}/delete",
+ *     "overview-form" = "/admin/structure/template-categories/manage/{wysiwyg_template_category}/overview",
+ *     "collection" = "/admin/structure/template-categories",
+ *     "reset-form" = "/admin/structure/template-categories/manage/{wysiwyg_template_category}/reset",
  *   },
  *   config_export = {
  *     "name",
@@ -95,7 +93,7 @@ class Category extends ConfigEntityBundleBase implements CategoryInterface {
   /**
    * {@inheritdoc}
    */
-  public function getValues() {
+  public function getTemplates() {
     $storage = $this->entityTypeManager()->getStorage('wysiwyg_template_content');
     return $storage->loadByProperties(['category_id' => $this->id()]);
   }

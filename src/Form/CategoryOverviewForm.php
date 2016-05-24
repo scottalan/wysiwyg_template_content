@@ -75,7 +75,7 @@ class CategoryOverviewForm extends FormBase {
 
     }
 
-    $wrapper_id = Html::getUniqueId('wysiwyg-template-category-values-ajax-wrapper');
+    $wrapper_id = Html::getUniqueId('template-categories-category-values-ajax-wrapper');
     $form['values'] = [
       '#type' => 'table',
       '#header' => [
@@ -88,7 +88,7 @@ class CategoryOverviewForm extends FormBase {
         [
           'action' => 'order',
           'relationship' => 'sibling',
-          'group' => 'wysiwyg-template-category-value-order-weight',
+          'group' => 'template-categories-category-value-order-weight',
         ],
       ],
       '#weight' => 5,
@@ -135,7 +135,7 @@ class CategoryOverviewForm extends FormBase {
         '#delta' => $max_weight,
         '#default_value' => $default_weight,
         '#attributes' => [
-          'class' => ['wysiwyg-template-category-value-order-weight'],
+          'class' => ['template-categories-category-value-order-weight'],
         ],
       ];
       // Used by SortArray::sortByWeightProperty to sort the rows.
@@ -202,7 +202,7 @@ class CategoryOverviewForm extends FormBase {
           'callback' => '::valuesAjax',
           'wrapper' => $wrapper_id,
         ],
-        '#prefix' => '<div class="wysiwyg-template-category-value-new">',
+        '#prefix' => '<div class="template-categories-category-value-new">',
         '#suffix' => '</div>',
       ];
       $form['values']['_add_new']['weight'] = [
