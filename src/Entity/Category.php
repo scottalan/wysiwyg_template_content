@@ -77,6 +77,13 @@ class Category extends ConfigEntityBundleBase implements CategoryInterface {
   protected $weight = 0;
 
   /**
+   * The users allowed to access the category.
+   *
+   * @var array
+   */
+  protected $users = [];
+
+  /**
    * {@inheritdoc}
    */
   public function id() {

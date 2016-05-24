@@ -26,20 +26,6 @@ class RouteSubscriber extends RouteSubscriberBase {
         $route->setDefault('_controller', '\Drupal\wysiwyg_template_content\Controller\TemplateContentController::listJson');
       }
     }
-
-    // Override the routes in wysiwyg_template.
-//    $route = $collection->get('entity.wysiwyg_template.collection');
-//    if ($route) {
-//      $route->setPath('/admin/structure/wysiwyg_template_category/manage/{wysiwyg_template_category}/templates');
-//    }
-//    $route = $collection->get('entity.wysiwyg_template.add_form');
-//    if ($route) {
-//      $route->setPath('/admin/structure/wysiwyg_template_content/manage/{wysiwyg_template_category}/add');
-//    }
-//    $route = $collection->get('entity.wysiwyg_template.edit_form');
-//    if ($route) {
-//      $route->setPath('/admin/structure/wysiwyg_template_content/manage/{wysiwyg_template_category}/edit');
-//    }
   }
 
 }

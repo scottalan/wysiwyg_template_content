@@ -25,10 +25,15 @@ wysiwyg_template_content.wysiwyg_template_content.*:
       label: 'Available content types'
       sequence:
         type: string
+    users:
+      type: sequence
+      label: 'Individual user access'
+      sequence:
+        type: string
 
 node.type.*.third_party.wysiwyg_template_content:
   type: mapping
-  label: 'Per content-type WYISIWYG template settings'
+  label: 'Per content-type settings for categories'
   mapping:
     default_template:
       label: 'Template Content to use for populating new content of this type'

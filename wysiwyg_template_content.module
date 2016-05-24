@@ -87,20 +87,20 @@ function wysiwyg_template_content_form_node_form_alter(array &$form, FormStateIn
   }
 }
 
-function wysiwyg_template_content_load($tid) {
-  return !is_numeric($tid) ? NULL : \Drupal\wysiwyg_template_content\Entity\TemplateContent::load($tid);
+function wysiwyg_template_content_load($template_id) {
+  return !is_numeric($template_id) ? NULL : \Drupal\wysiwyg_template_content\Entity\TemplateContent::load($template_id);
 }
 
-function wysiwyg_template_content_load_multiple(array $tids = NULL) {
-  return \Drupal\wysiwyg_template_content\Entity\TemplateContent::loadMultiple($tids);
+function wysiwyg_template_content_load_multiple(array $template_ids = NULL) {
+  return \Drupal\wysiwyg_template_content\Entity\TemplateContent::loadMultiple($template_ids);
 }
 
-function wysiwyg_template_content_category_load($lid) {
-  return \Drupal\wysiwyg_template_content\Entity\Category::load($lid);
+function wysiwyg_template_content_category_load($category_id) {
+  return \Drupal\wysiwyg_template_content\Entity\Category::load($category_id);
 }
 
-function wysiwyg_template_content_category_load_multiple(array $lids = NULL) {
-  return \Drupal\wysiwyg_template_content\Entity\Category::loadMultiple($lids);
+function wysiwyg_template_content_category_load_multiple(array $category_ids = NULL) {
+  return \Drupal\wysiwyg_template_content\Entity\Category::loadMultiple($category_ids);
 }
 
 function wysiwyg_template_content_title(TemplateContent $template) {

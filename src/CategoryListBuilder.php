@@ -2,7 +2,7 @@
 
 namespace Drupal\wysiwyg_template_content;
 
-use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
+use Drupal\Core\Config\Entity\DraggableListBuilder;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
 use Drupal\wysiwyg_template_content\CategoryInterface;
@@ -10,7 +10,7 @@ use Drupal\wysiwyg_template_content\CategoryInterface;
 /**
  * Defines a class to build a list of template category entities.
  */
-class CategoryListBuilder extends ConfigEntityListBuilder {
+class CategoryListBuilder extends DraggableListBuilder {
 
   /**
    * @var \Drupal\wysiwyg_template_content\CategoryInterface
@@ -21,6 +21,13 @@ class CategoryListBuilder extends ConfigEntityListBuilder {
    * @var \Drupal\wysiwyg_template_content\TemplateContentInterface
    */
   protected $templateForm;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getFormId() {
+    return 'wysiwyg_template_category_list';
+  }
 
   /**
    * {@inheritdoc}
@@ -53,8 +60,6 @@ class CategoryListBuilder extends ConfigEntityListBuilder {
    */
   public function buildHeader() {
     $header['label'] = $this->t('Category');
-    $header['id'] = $this->t('Id');
-    $header['description'] = $this->t('Description');
     return $header + parent::buildHeader();
   }
 
@@ -63,8 +68,6 @@ class CategoryListBuilder extends ConfigEntityListBuilder {
    */
   public function buildRow(EntityInterface $entity) {
     $row['label'] = $entity->label();
-    $row['id'] = $entity->id();
-    $row['description'] = $entity->getDescription();
     return $row + parent::buildRow($entity);
   }
 

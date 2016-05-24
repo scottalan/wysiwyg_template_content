@@ -35,6 +35,7 @@ use Drupal\wysiwyg_template_content\TemplateContentInterface;
  *     "route_provider" = {
  *       "default" = "Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider",
  *     },
+ *     "access" = "Drupal\wysiwyg_template_content\Access\CategoryTemplateAccessControl",
  *   },
  *   base_table = "wysiwyg_template_content",
  *   base_table = "wysiwyg_template_content_field_data",

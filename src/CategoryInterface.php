@@ -23,4 +23,5 @@ interface CategoryInterface extends ConfigEntityInterface {
    *   The category description.
    */
   public function getDescription();
+
 }

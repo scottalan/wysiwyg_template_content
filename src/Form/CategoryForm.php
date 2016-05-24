@@ -2,6 +2,8 @@
 
 namespace Drupal\wysiwyg_template_content\Form;
 
+use Drupal\user\Plugin\views\filter\Name;
+use Drupal\Core\Entity\Element\EntityAutocomplete;
 use Drupal\Core\Entity\BundleEntityFormBase;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -20,7 +22,7 @@ class CategoryForm extends BundleEntityFormBase {
    *
    * @var \Drupal\Core\Config\Entity\ConfigEntityStorageInterface
    */
-  protected $category_storage;
+  protected $storage;
 
   /**
    * The template storage.
@@ -30,20 +32,13 @@ class CategoryForm extends BundleEntityFormBase {
   protected $template_storage;
 
   /**
-   * The template storage.
+   * Constructor for the category form.
    *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected $storage;
-
-  /**
-   * Constructs a new category form.
-   *
-   * @param \Drupal\Core\Config\Entity\ConfigEntityStorageInterface $category_storage
+   * @param \Drupal\Core\Config\Entity\ConfigEntityStorageInterface $storage
    *   The category storage.
    */
-  public function __construct(ConfigEntityStorageInterface $category_storage, EntityTypeManagerInterface $entity_type_manager) {
-    $this->category_storage = $category_storage;
+  public function __construct(ConfigEntityStorageInterface $storage, EntityTypeManagerInterface $entity_type_manager) {
+    $this->storage = $storage;
     $this->template_storage = $entity_type_manager->getStorage('wysiwyg_template_content');
   }
 
@@ -121,6 +116,8 @@ class CategoryForm extends BundleEntityFormBase {
     $form_state->setRedirectUrl($category->toUrl('collection'));
     $form_state->setValue('category_id', $category->id());
     $form_state->set('category_id', $category->id());
+    $form_state->setValue('users', $category->getUsers());
+    $form_state->set('users', $category->getUsers());
   }
 
   /**

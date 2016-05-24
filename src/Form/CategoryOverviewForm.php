@@ -60,7 +60,7 @@ class CategoryOverviewForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $user_input = $form_state->getUserInput();
-    $values = $this->category->getValues();
+    $values = $this->category->getTemplates();
     // The value map allows new values to be added and removed before saving.
     // An array in the $index => $id format. $id is '_new' for unsaved values.
     $value_map = (array) $form_state->get('value_map');

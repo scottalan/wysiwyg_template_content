@@ -11,7 +11,7 @@ use Drupal\wysiwyg_template_content\CategoryInterface;
 /**
  * Determines access to categories.
  */
-class TemplateContentAddAccessCheck implements AccessInterface {
+class CategoryTemplateAccessControl implements AccessInterface {
 
   /**
    * The entity manager.
