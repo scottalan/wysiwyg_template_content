@@ -41,7 +41,7 @@ use Drupal\wysiwyg_template_content\TemplateContentInterface;
  *   entity_keys = {
  *     "id" = "template_id",
  *     "bundle" = "category_id",
- *     "label" = "name",
+ *     "label" = "label",
  *     "uuid" = "uuid"
  *   },
  *   bundle_entity_type = "wysiwyg_template_category",
@@ -100,9 +100,10 @@ class TemplateContent extends ContentEntityBase implements TemplateContentInterf
    * {@inheritdoc}
    */
   public function getBody() {
-    if ($body = $this->get('body')) {
+    if ($body = $this->get('body') && isset($body['value'])) {
       return $body['value'];
     }
+    return FALSE;
   }
 
   /**
@@ -110,7 +111,8 @@ class TemplateContent extends ContentEntityBase implements TemplateContentInterf
    */
   public function setFormat($format) {
     if ($body = $this->get('body')) {
-      return $body['format'];
+      $this->set($body['format'], $format);
+      return $this;
     }
   }
 
@@ -118,16 +120,17 @@ class TemplateContent extends ContentEntityBase implements TemplateContentInterf
    * {@inheritdoc}
    */
   public function getFormat() {
-    if ($body = $this->get('body')) {
+    if ($body = $this->get('body') && isset($body['format'])) {
       return $body['format'];
     }
+    return FALSE;
   }
 
   /**
    * {@inheritdoc}
    */
   public function setName($name) {
-    $this->set('name', $name);
+    $this->set('label', $name);
     return $this;
   }
 
@@ -156,35 +159,12 @@ class TemplateContent extends ContentEntityBase implements TemplateContentInterf
   /**
    * {@inheritdoc}
    */
-  public function save() {
-    $this->node_types = array_values(array_filter($this->getNodeTypes()));
-    parent::save();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields = parent::baseFieldDefinitions($entity_type);
-    $fields['template_id'] = BaseFieldDefinition::create('integer')
-      ->setLabel(t('Template Content ID'))
-      ->setDescription(t('The template ID.'))
-      ->setReadOnly(TRUE)
-      ->setSetting('unsigned', TRUE);
 
-    $fields['uuid'] = BaseFieldDefinition::create('uuid')
-      ->setLabel(t('UUID'))
-      ->setDescription(t('The template UUID.'))
-      ->setReadOnly(TRUE);
-
-    $fields['category_id'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('Category'))
-      ->setDescription(t('The category to which the template is assigned.'))
-      ->setSetting('target_type', 'wysiwyg_template_category');
-
-    $fields['name'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Name'))
-      ->setDescription(t('The template name.'))
+    $fields['label'] = BaseFieldDefinition::create('string')
+      ->setLabel(t('Title'))
+      ->setDescription(t('Give the template a name.'))
       ->setTranslatable(TRUE)
       ->setRequired(TRUE)
       ->setSetting('max_length', 255)
@@ -196,6 +176,22 @@ class TemplateContent extends ContentEntityBase implements TemplateContentInterf
       ->setDisplayOptions('form', array(
         'type' => 'string_textfield',
         'weight' => -10,
+      ))
+      ->setDisplayConfigurable('form', TRUE);
+
+    $fields['body'] = BaseFieldDefinition::create('text_long')
+      ->setLabel(t('HTML Template'))
+      ->setDescription(t('The template content.'))
+      ->setTranslatable(TRUE)
+      ->setDisplayOptions('view', array(
+        'label' => 'hidden',
+        'type' => 'text_default',
+        'weight' => -9,
+      ))
+      ->setDisplayConfigurable('view', TRUE)
+      ->setDisplayOptions('form', array(
+        'type' => 'text_textarea',
+        'weight' => -9,
       ))
       ->setDisplayConfigurable('form', TRUE);
 
@@ -217,21 +213,21 @@ class TemplateContent extends ContentEntityBase implements TemplateContentInterf
       ))
       ->setDisplayConfigurable('form', TRUE);
 
-    $fields['body'] = BaseFieldDefinition::create('text_long')
-      ->setLabel(t('HTML Template'))
-      ->setDescription(t('The template content.'))
-      ->setTranslatable(TRUE)
-      ->setDisplayOptions('view', array(
-        'label' => 'hidden',
-        'type' => 'text_default',
-        'weight' => -9,
-      ))
-      ->setDisplayConfigurable('view', TRUE)
-      ->setDisplayOptions('form', array(
-        'type' => 'text_textfield',
-        'weight' => -9,
-      ))
-      ->setDisplayConfigurable('form', TRUE);
+    $fields['template_id'] = BaseFieldDefinition::create('integer')
+      ->setLabel(t('Template Content ID'))
+      ->setDescription(t('The template ID.'))
+      ->setReadOnly(TRUE)
+      ->setSetting('unsigned', TRUE);
+
+    $fields['uuid'] = BaseFieldDefinition::create('uuid')
+      ->setLabel(t('UUID'))
+      ->setDescription(t('The template UUID.'))
+      ->setReadOnly(TRUE);
+
+    $fields['category_id'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Category'))
+      ->setDescription(t('The category to which the template is assigned.'))
+      ->setSetting('target_type', 'wysiwyg_template_category');
 
     $fields['weight'] = BaseFieldDefinition::create('integer')
       ->setLabel(t('Weight'))

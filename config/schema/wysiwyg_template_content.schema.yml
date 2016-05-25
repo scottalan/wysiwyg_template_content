@@ -25,11 +25,6 @@ wysiwyg_template_content.wysiwyg_template_content.*:
       label: 'Available content types'
       sequence:
         type: string
-    users:
-      type: sequence
-      label: 'Individual user access'
-      sequence:
-        type: string
 
 node.type.*.third_party.wysiwyg_template_content:
   type: mapping

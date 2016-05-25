@@ -123,6 +123,14 @@ class Category extends ConfigEntityBundleBase implements CategoryInterface {
   /**
    * {@inheritdoc}
    */
+  public function save() {
+    $this->node_types = array_values(array_filter($this->getNodeTypes()));
+    parent::save();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public static function loadByNodeType(NodeTypeInterface $node_type = NULL) {
     /** @var \Drupal\wysiwyg_template_content\CategoryInterface[] $categories */
     $categories = static::loadMultiple();

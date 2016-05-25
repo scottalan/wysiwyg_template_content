@@ -9,8 +9,8 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
 use Drupal\node\NodeTypeInterface;
 use Drupal\node\Entity\NodeType;
-use Drupal\wysiwyg_template_content\Entity\TemplateContent;
 use Drupal\wysiwyg_template_content\Entity\Category;
+use Drupal\wysiwyg_template_content\Entity\TemplateContent;
 use Drupal\wysiwyg_template_content\TemplateContentInterface;
 use Drupal\wysiwyg_template_content\CategoryInterface;
 
@@ -42,7 +42,7 @@ function wysiwyg_template_content_editor_js_settings_alter(array &$settings) {
 function wysiwyg_template_content_form_node_type_form_alter(array &$form,FormStateInterface $form_state) {
   /** @var \Drupal\node\NodeTypeInterface $type */
   $type = $form_state->getFormObject()->getEntity();
-  $templates = TemplateContent::loadByNodeType($type);
+  $categories = Category::loadByNodeType($type);
   $form['wysiwyg_template_content'] = [
     '#type' => 'details',
     '#title' => t('WYSIWYG template'),
@@ -52,9 +52,9 @@ function wysiwyg_template_content_form_node_type_form_alter(array &$form,FormSta
     '#type' => 'select',
     '#options' => array_map(function($item) {
       return $item->label();
-    }, $templates),
+    }, $categories),
     '#default_value' => $type->getThirdPartySetting('wysiwyg_template_content', 'default_template'),
-    '#title' => t('Default template for this content type'),
+    '#title' => t('Default category for this content type'),
     '#empty_value' => '',
   ];
 
@@ -80,30 +80,50 @@ function wysiwyg_template_content_form_node_form_alter(array &$form, FormStateIn
   $node = $form_state->getFormObject()->getEntity();
   /** @var \Drupal\node\NodeTypeInterface $type */
   $type = NodeType::load($node->getType());
-  if ($node->isNew() && $template_id = $type->getThirdPartySetting('wysiwyg_template_content', 'default_template')) {
+  if ($node->isNew() && $category_id = $type->getThirdPartySetting('wysiwyg_template_content', 'default_template')) {
     /** @var \Drupal\wysiwyg_template_content\TemplateContentInterface $template */
-    $template = TemplateContent::load($template_id);
+    $template = Category::load($category_id);
     $form['body']['widget'][0]['#default_value'] = $template->getBody();
   }
 }
 
-function wysiwyg_template_content_load($template_id) {
+/**
+ * @param $template_id
+ * @return EntityInterface|null|static
+ */
+function wysiwyg_template_content_template_load($template_id) {
   return !is_numeric($template_id) ? NULL : \Drupal\wysiwyg_template_content\Entity\TemplateContent::load($template_id);
 }
 
-function wysiwyg_template_content_load_multiple(array $template_ids = NULL) {
+/**
+ * @param array|NULL $template_ids
+ * @return \Drupal\Core\Entity\EntityInterface[]|static[]
+ */
+function wysiwyg_template_content_template_load_multiple(array $template_ids = NULL) {
   return \Drupal\wysiwyg_template_content\Entity\TemplateContent::loadMultiple($template_ids);
 }
 
+/**
+ * @param $category_id
+ * @return EntityInterface|null|static
+ */
 function wysiwyg_template_content_category_load($category_id) {
   return \Drupal\wysiwyg_template_content\Entity\Category::load($category_id);
 }
 
+/**
+ * @param array|NULL $category_ids
+ * @return \Drupal\Core\Entity\EntityInterface[]|static[]
+ */
 function wysiwyg_template_content_category_load_multiple(array $category_ids = NULL) {
   return \Drupal\wysiwyg_template_content\Entity\Category::loadMultiple($category_ids);
 }
 
-function wysiwyg_template_content_title(TemplateContent $template) {
+/**
+ * @param TemplateContent $template
+ * @return mixed|null|string
+ */
+function wysiwyg_template_content_template_title(TemplateContent $template) {
   return $template->getName();
 }
 
@@ -134,14 +154,5 @@ function wysiwyg_template_category_get_names() {
 //function wysiwyg_template_content_uri($template) {
 //  return new Url('entity.wysiwyg_template_content.canonical', array(
 //    'wysiwyg_template_content' => $template->id(),
-//  ));
-//}
-//
-///**
-// * Entity URI callback.
-// */
-//function taxonomy_term_uri($term) {
-//  return new Url('entity.taxonomy_term.canonical', array(
-//    'taxonomy_term' => $term->id(),
 //  ));
 //}
