@@ -114,10 +114,6 @@ class CategoryForm extends BundleEntityFormBase {
     }
 
     $form_state->setRedirectUrl($category->toUrl('collection'));
-    $form_state->setValue('category_id', $category->id());
-    $form_state->set('category_id', $category->id());
-    $form_state->setValue('users', $category->getUsers());
-    $form_state->set('users', $category->getUsers());
   }
 
   /**

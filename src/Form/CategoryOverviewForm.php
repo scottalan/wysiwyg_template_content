@@ -25,6 +25,8 @@ class CategoryOverviewForm extends FormBase {
    */
   protected $entityTypeManager;
 
+  protected $templateStorage;
+
   /**
    * {@inheritdoc}
    */
@@ -42,6 +44,7 @@ class CategoryOverviewForm extends FormBase {
    */
   public function __construct(CurrentRouteMatch $current_route_match, EntityTypeManagerInterface $entity_type_manager) {
     $this->category = $current_route_match->getParameter('wysiwyg_template_category');
+    $this->templateStorage = $entity_type_manager->getStorage('wysiwyg_template_content');
     $this->entityTypeManager = $entity_type_manager;
   }
 
@@ -61,18 +64,16 @@ class CategoryOverviewForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $user_input = $form_state->getUserInput();
     $values = $this->category->getTemplates();
+
+    // Set the form title to that of the category.
+    $title = $this->category->label();
+
     // The value map allows new values to be added and removed before saving.
     // An array in the $index => $id format. $id is '_new' for unsaved values.
     $value_map = (array) $form_state->get('value_map');
     if (empty($value_map)) {
       $value_map = $values ? array_keys($values) : ['_new'];
       $form_state->set('value_map', $value_map);
-    }
-    // Set the form title to that of the category.
-    $form['#title'] = $this->category->label();
-
-    if (empty($values)) {
-
     }
 
     $wrapper_id = Html::getUniqueId('template-categories-category-values-ajax-wrapper');
@@ -83,7 +84,7 @@ class CategoryOverviewForm extends FormBase {
         $this->t('Weight'),
         $this->t('Operations'),
       ],
-      '#empty' => $this->t('No templates available. <a href=":link">Add a template to this category</a>.', array(':link' => $this->url('entity.wysiwyg_template_content.add_form', array('wysiwyg_template_category' => $this->category->id())))),
+      '#empty' => $this->t('No templates available. <a href=":link">Add a template to :title</a>.', array(':title' => $title, ':link' => $this->url('entity.wysiwyg_template_content.add_form', array('wysiwyg_template_category' => $this->category->id())))),
       '#tabledrag' => [
         [
           'action' => 'order',
@@ -99,9 +100,17 @@ class CategoryOverviewForm extends FormBase {
       // doesn't have any values of its own that need processing.
       '#input' => FALSE,
     ];
+
+    // If there are not templates just return the form now.
+    if (empty($values)) {
+      return $form;
+    }
+
     // Make the weight list always reflect the current number of values.
     // Taken from WidgetBase::formMultipleElements().
     $max_weight = count($value_map);
+
+//    $tree = $this->storageController->loadTree($taxonomy_vocabulary->id(), 0, NULL, TRUE);
 
     foreach ($value_map as $index => $id) {
       $value_form = &$form['values'][$index];
