@@ -3,14 +3,19 @@
 namespace Drupal\wysiwyg_template_content;
 
 use Drupal\Core\Config\Entity\DraggableListBuilder;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Url;
-use Drupal\wysiwyg_template_content\CategoryInterface;
 
 /**
  * Defines a class to build a list of template category entities.
  */
 class CategoryListBuilder extends DraggableListBuilder {
+
+  /**
+   * {@inheritdoc}
+   */
+  protected $entitiesKey = 'categories';
 
   /**
    * @var \Drupal\wysiwyg_template_content\CategoryInterface
@@ -69,6 +74,16 @@ class CategoryListBuilder extends DraggableListBuilder {
   public function buildRow(EntityInterface $entity) {
     $row['label'] = $entity->label();
     return $row + parent::buildRow($entity);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildForm(array $form, FormStateInterface $form_state) {
+    $form = parent::buildForm($form, $form_state);
+    // Override the empty text.
+    $form[$this->entitiesKey]['#empty'] = $this->t('Add a new category.');
+    return $form;
   }
 
 }

@@ -29,7 +29,7 @@ entity.wysiwyg_template_content.add_form:
 entity.wysiwyg_template_category.overview_form:
   path: '/admin/structure/template-categories/manage/{wysiwyg_template_category}/overview'
   defaults:
-    _form: '\Drupal\wysiwyg_template_content\Form\CategoryOverviewForm'
+    _controller: '\Drupal\wysiwyg_template_content\Controller\TemplateContentController::categoryOverview'
     _title: 'List templates'
   options:
     parameters:
