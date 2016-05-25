@@ -50,8 +50,8 @@ class CategoryTemplatePermissions implements ContainerInjectionInterface {
     $permissions = [];
     foreach ($this->entityManager->getStorage('wysiwyg_template_category')->loadMultiple() as $category) {
       $permissions += [
-        'add templates in ' . $category->id() => [
-          'title' => $this->t('Add templates to the %category category', ['%category' => $category->label()]),
+        'use templates in ' . $category->id() => [
+          'title' => $this->t('Use templates in the %category category', ['%category' => $category->label()]),
         ],
       ];
       $permissions += [
