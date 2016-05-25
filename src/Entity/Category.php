@@ -14,6 +14,7 @@ use Drupal\wysiwyg_template_content\CategoryInterface;
  *   label = @Translation("Category"),
  *   handlers = {
  *     "form" = {
+ *       "list" = "Drupal\wysiwyg_template_content\TemplateListBuilder",
  *       "default" = "Drupal\wysiwyg_template_content\Form\CategoryForm",
  *       "delete" = "Drupal\wysiwyg_template_content\Form\CategoryDeleteForm",
  *       "reset" = "Drupal\wysiwyg_template_content\Form\CategoryResetForm",

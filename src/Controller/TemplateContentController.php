@@ -30,6 +30,15 @@ class TemplateContentController extends ControllerBase {
   protected $template_storage;
 
   /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('entity_type.manager')
+    );
+  }
+
+  /**
    * Returns a form to create a template in a category.
    *
    * @param \Drupal\wysiwyg_template_content\CategoryInterface $wysiwyg_template_category
@@ -46,7 +55,7 @@ class TemplateContentController extends ControllerBase {
   public function categoryOverview(CategoryInterface $wysiwyg_template_category) {
     if ($wysiwyg_template_category) {
       $templates = $wysiwyg_template_category->getTemplates();
-      // @todo: send these for render in a draggable list.
+
     }
   }
 
