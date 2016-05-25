@@ -21,7 +21,7 @@ use Drupal\wysiwyg_template_content\TemplateContentInterface;
  * @ContentEntityType(
  *   id = "wysiwyg_template_content",
  *   label = @Translation("Template Content"),
- *   bundle_label = @Translation("Library"),
+ *   bundle_label = @Translation("Category"),
  *   handlers = {
  *     "storage" = "Drupal\Core\Entity\Sql\SqlContentEntityStorage",
  *     "list_builder" = "Drupal\Core\Entity\EntityListBuilder",
@@ -37,16 +37,17 @@ use Drupal\wysiwyg_template_content\TemplateContentInterface;
  *     },
  *   },
  *   base_table = "wysiwyg_template_content",
+ *   base_table = "wysiwyg_template_content_field_data",
  *   admin_permission = "administer wysiwyg templates",
  *   fieldable = TRUE,
  *   entity_keys = {
  *     "id" = "template_id",
- *     "bundle" = "library_id",
+ *     "bundle" = "category_id",
  *     "label" = "name",
  *     "uuid" = "uuid"
  *   },
- *   bundle_entity_type = "wysiwyg_template_library",
- *   field_ui_base_route = "entity.wysiwyg_template_library.edit_form",
+ *   bundle_entity_type = "wysiwyg_template_category",
+ *   field_ui_base_route = "entity.wysiwyg_template_category.edit_form",
  *   links = {
  *     "canonical" = "/admin/wysiwyg-template/templates/{wysiwyg_template_content}",
  *     "edit-form" = "/admin/wysiwyg-template/templates/{wysiwyg_template_content}/edit",
@@ -71,15 +72,15 @@ class TemplateContent extends ContentEntityBase implements TemplateContentInterf
   /**
    * {@inheritdoc}
    */
-  public function getLibrary() {
-    return $this->get('library_id')->entity;
+  public function getCategory() {
+    return $this->get('category_id')->entity;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getLibraryId() {
-    return $this->get('library_id')->target_id;
+  public function getCategoryId() {
+    return $this->get('category_id')->target_id;
   }
 
   /**
@@ -185,10 +186,10 @@ class TemplateContent extends ContentEntityBase implements TemplateContentInterf
       ->setDescription(t('The template UUID.'))
       ->setReadOnly(TRUE);
 
-    $fields['library_id'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('Library'))
-      ->setDescription(t('The library to which the template is assigned.'))
-      ->setSetting('target_type', 'wysiwyg_template_library');
+    $fields['category_id'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Category'))
+      ->setDescription(t('The category to which the template is assigned.'))
+      ->setSetting('target_type', 'wysiwyg_template_category');
 
     $fields['name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Name'))

@@ -113,12 +113,12 @@ interface TemplateContentInterface extends ContentEntityInterface {
   public function getWeight();
 
   /**
-   * Get the library id this template belongs to.
+   * Get the category id this template belongs to.
    *
    * @return int
-   *   The id of the library.
+   *   The id of the category.
    */
-  public function getLibraryId();
+  public function getCategoryId();
 
   /**
    * Gets the list of allowed node types.

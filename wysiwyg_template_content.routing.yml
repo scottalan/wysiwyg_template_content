@@ -15,7 +15,7 @@ wysiwyg_template_content.admin_wysiwyg_template_content:
 #    _entity_create_access: 'wysiwyg_template_content'
 
 entity.wysiwyg_template_content.add_form:
-  path: '/admin/wysiwyg-template/libraries/manage/{wysiwyg_template_library}/add'
+  path: '/admin/wysiwyg-template/categories/manage/{wysiwyg_template_category}/add'
   defaults:
     _form: '\Drupal\wysiwyg_template_content\Form\TemplateContentForm'
     _title: 'Create a new template'
@@ -34,33 +34,33 @@ entity.wysiwyg_template_content.add_form:
 #  requirements:
 #    _permission: 'administer wysiwyg templates'
 
-entity.wysiwyg_template_library.collection:
-  path: '/admin/wysiwyg-template/libraries'
+entity.wysiwyg_template_category.collection:
+  path: '/admin/wysiwyg-template/categories'
   defaults:
-    _entity_list: 'wysiwyg_template_library'
-    _title: 'Libraries'
+    _entity_list: 'wysiwyg_template_category'
+    _title: 'Categories'
   requirements:
-    _permission: 'administer template libraries'
+    _permission: 'administer template categories'
 
-entity.wysiwyg_template_library.overview_form:
-  path: '/admin/wysiwyg-template/libraries/manage/{wysiwyg_template_library}/overview'
+entity.wysiwyg_template_category.overview_form:
+  path: '/admin/wysiwyg-template/categories/manage/{wysiwyg_template_category}/overview'
   defaults:
-    _form: '\Drupal\wysiwyg_template_content\Form\LibraryOverviewForm'
+    _form: '\Drupal\wysiwyg_template_content\Form\CategoryOverviewForm'
     _title: 'List templates'
   options:
     parameters:
-      wysiwyg_template_library:
-        type: 'entity:wysiwyg_template_library'
+      wysiwyg_template_category:
+        type: 'entity:wysiwyg_template_category'
   requirements:
-    _permission: 'administer template libraries'
+    _permission: 'administer template categories'
 
-entity.wysiwyg_template_library.reset_form:
-  path: '/admin/wysiwyg-template/libraries/manage/{wysiwyg_template_library}/reset'
+entity.wysiwyg_template_category.reset_form:
+  path: '/admin/wysiwyg-template/categories/manage/{wysiwyg_template_category}/reset'
   defaults:
-    _entity_form: 'wysiwyg_template_library.reset'
+    _entity_form: 'wysiwyg_template_category.reset'
     _title: 'Reset'
   requirements:
-    _permission: 'administer template libraries'
+    _permission: 'administer template categories'
 
 entity.wysiwyg_template_content.collection:
   path: '/admin/wysiwyg-template/templates'

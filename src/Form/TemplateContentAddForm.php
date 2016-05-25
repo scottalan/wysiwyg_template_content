@@ -13,7 +13,7 @@ use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Link;
 use Drupal\node\Entity\NodeType;
-use Drupal\wysiwyg_template_content\LibraryInterface;
+use Drupal\wysiwyg_template_content\CategoryInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -31,7 +31,7 @@ class TemplateContentAddForm extends FormBase {
   /**
    * @var \Drupal\Core\Entity\EntityStorageInterface
    */
-  protected $libraryStorage;
+  protected $categoryStorage;
 
   /**
    * TemplateContentForm constructor.
@@ -40,7 +40,7 @@ class TemplateContentAddForm extends FormBase {
    */
   public function __construct(EntityTypeManagerInterface $entityTypeManager) {
     $this->templateStorage = $entityTypeManager->getStorage('wysiwyg_template_content');
-    $this->libraryStorage = $entityTypeManager->getStorage('wysiwyg_template_library');
+    $this->categoryStorage = $entityTypeManager->getStorage('wysiwyg_template_category');
   }
 
   /**
@@ -118,28 +118,28 @@ class TemplateContentAddForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
 
-    // Skip the form if there isn't at least one library.
-    $query = $this->libraryStorage->getQuery();
+    // Skip the form if there isn't at least one category.
+    $query = $this->categoryStorage->getQuery();
     if ($query->count()->execute() == 0) {
-//      $url = Url::fromRoute('entity.wysiwyg_template_library.add_form', )
-      $link = Link::createFromRoute('Library', 'entity.wysiwyg_template_library.add_form');
+//      $url = Url::fromRoute('entity.wysiwyg_template_category.add_form', )
+      $link = Link::createFromRoute('Category', 'entity.wysiwyg_template_category.add_form');
       $form['warning'] = [
-        '#markup' => t("Add your first @library now.", ['@library' => $link->toString()]),
+        '#markup' => t("Add your first @category now.", ['@category' => $link->toString()]),
       ];
     }
     else {
-//      $form['library'] = [
+//      $form['category'] = [
 //        '#type' => 'commerce_entity_select',
-//        '#title' => t('Library'),
-//        '#target_type' => 'wysiwyg_template_library',
+//        '#title' => t('Category'),
+//        '#target_type' => 'wysiwyg_template_category',
 //        '#required' => TRUE,
 //      ];
     }
 
-    $form['library'] = [
+    $form['category'] = [
       '#type' => 'entity_autocomplete',
-      '#title' => t('Find a library'),
-      '#target_type' => 'wysiwyg_template_library',
+      '#title' => t('Find a category'),
+      '#target_type' => 'wysiwyg_template_category',
       '#selection_settings' => [
         'match_operator' => 'CONTAINS',
       ],
@@ -175,7 +175,7 @@ class TemplateContentAddForm extends FormBase {
     $template_data = [
       'title' => $values['title'],
       'body' => $values['body'],
-      'library_id' => [$values['library_id']],
+      'category_id' => [$values['category_id']],
     ];
 
     $template = $this->templateStorage->create($template_data);

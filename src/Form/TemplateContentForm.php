@@ -60,11 +60,11 @@ class TemplateContentForm extends ContentEntityForm {
    */
 //  public function buildForm(array $form, FormStateInterface $form_state) {
 //    // Skip building the form if there are no available stores.
-//    $library_query = $this->entityManager->getStorage('wysiwyg_template_library')->getQuery();
-//    if ($library_query->count()->execute() == 0) {
-//      $link = Link::createFromRoute('Add a new library.', 'entity.wysiwyg_template_content.add_page');
+//    $category_query = $this->entityManager->getStorage('wysiwyg_template_category')->getQuery();
+//    if ($category_query->count()->execute() == 0) {
+//      $link = Link::createFromRoute('Add a new category.', 'entity.wysiwyg_template_content.add_page');
 //      $form['warning'] = [
-//        '#markup' => t("Templates require a library. @link", ['@link' => $link->toString()]),
+//        '#markup' => t("Templates require a category. @link", ['@link' => $link->toString()]),
 //      ];
 //      return $form;
 //    }
@@ -78,15 +78,15 @@ class TemplateContentForm extends ContentEntityForm {
     /* @var \Drupal\wysiwyg_template_content\Entity\TemplateContent $wysiwyg_template */
     $wysiwyg_template = $this->entity;
 
-    $library_storage = $this->entityManager->getStorage('wysiwyg_template_library');
-    $library = $library_storage->load($wysiwyg_template->bundle());
+    $category_storage = $this->entityManager->getStorage('wysiwyg_template_category');
+    $category = $category_storage->load($wysiwyg_template->bundle());
 
-    $form_state->set(['wysiwyg_template_content', 'wysiwyg_template_library'], $library);
+    $form_state->set(['wysiwyg_template_content', 'wysiwyg_template_category'], $category);
 
-    $form['library'] = [
+    $form['category'] = [
       '#type' => 'entity_autocomplete',
-      '#title' => t('Find a library'),
-      '#target_type' => 'wysiwyg_template_library',
+      '#title' => t('Find a category'),
+      '#target_type' => 'wysiwyg_template_category',
       '#selection_settings' => [
         'match_operator' => 'CONTAINS',
       ],
@@ -140,9 +140,9 @@ class TemplateContentForm extends ContentEntityForm {
       '#options' => $node_types,
     ];
 
-    $form['library_id'] = array(
+    $form['category_id'] = array(
       '#type' => 'value',
-      '#value' => $library->id(),
+      '#value' => $category->id(),
     );
 
     $form['template_id'] = array(
@@ -175,7 +175,7 @@ class TemplateContentForm extends ContentEntityForm {
     /** @var \Drupal\wysiwyg_template_content\TemplateContentInterface $template */
     $wysiwyg_template = $this->getEntity();
 
-    $form_state->setRedirect('entity.wysiwyg_template_library.collection');
+    $form_state->setRedirect('entity.wysiwyg_template_category.collection');
     $status = $wysiwyg_template->save();
 
     switch ($status) {
@@ -192,11 +192,11 @@ class TemplateContentForm extends ContentEntityForm {
         break;
     }
 
-    if ($form_state->hasValue(['wysiwyg_template_content', 'wysiwyg_template_library'])) {
+    if ($form_state->hasValue(['wysiwyg_template_content', 'wysiwyg_template_category'])) {
       $yes = TRUE;
     }
-    $library_value1 = $form_state->getValue('library_id');
-    $library_value = $form_state->get(['wysiwyg_template_content', 'wysiwyg_template_library']);
+    $category_value1 = $form_state->getValue('category_id');
+    $category_value = $form_state->get(['wysiwyg_template_content', 'wysiwyg_template_category']);
 
     $form_state->setValue('template_id', $this->entity->id());
     $form_state->set('template_id', $this->entity->id());

@@ -5,20 +5,20 @@ namespace Drupal\wysiwyg_template_content;
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 
 /**
- * Defines a storage handler class for wysiwyg template libraries.
+ * Defines a storage handler class for wysiwyg template categories.
  */
 class TemplateContentStorage extends SqlContentEntityStorage implements TemplateContentStorageInterface {
 
   /**
    * {@inheritdoc}
    */
-  public function loadLibraryTemplates($lid) {
+  public function loadCategoryTemplates($lid) {
 
     $tree = array();
     $query = $this->database->select('wysiwyg_template_content_data', 't');
     $result = $query
       ->fields('t')
-      ->condition('t.library_id', $lid)
+      ->condition('t.category_id', $lid)
       ->orderBy('t.weight')
       ->orderBy('t.name')
       ->execute();

@@ -30,15 +30,15 @@ class RouteSubscriber extends RouteSubscriberBase {
     // Override the routes in wysiwyg_template.
 //    $route = $collection->get('entity.wysiwyg_template.collection');
 //    if ($route) {
-//      $route->setPath('/admin/structure/wysiwyg_template_library/manage/{wysiwyg_template_library}/templates');
+//      $route->setPath('/admin/structure/wysiwyg_template_category/manage/{wysiwyg_template_category}/templates');
 //    }
 //    $route = $collection->get('entity.wysiwyg_template.add_form');
 //    if ($route) {
-//      $route->setPath('/admin/structure/wysiwyg_template_content/manage/{wysiwyg_template_library}/add');
+//      $route->setPath('/admin/structure/wysiwyg_template_content/manage/{wysiwyg_template_category}/add');
 //    }
 //    $route = $collection->get('entity.wysiwyg_template.edit_form');
 //    if ($route) {
-//      $route->setPath('/admin/structure/wysiwyg_template_content/manage/{wysiwyg_template_library}/edit');
+//      $route->setPath('/admin/structure/wysiwyg_template_content/manage/{wysiwyg_template_category}/edit');
 //    }
   }
 
