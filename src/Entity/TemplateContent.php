@@ -12,7 +12,6 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
-use Drupal\node\NodeTypeInterface;
 use Drupal\wysiwyg_template_content\TemplateContentInterface;
 
 /**
@@ -157,13 +156,6 @@ class TemplateContent extends ContentEntityBase implements TemplateContentInterf
   /**
    * {@inheritdoc}
    */
-  public function getNodeTypes() {
-    return $this->node_types ?: [];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function save() {
     $this->node_types = array_values(array_filter($this->getNodeTypes()));
     parent::save();
@@ -262,32 +254,6 @@ class TemplateContent extends ContentEntityBase implements TemplateContentInterf
     // Sort the queried roles by their weight.
     // See \Drupal\Core\Config\Entity\ConfigEntityBase::sort().
     uasort($entities, 'static::sort');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function loadByNodeType(NodeTypeInterface $node_type = NULL) {
-    /** @var \Drupal\wysiwyg_template_content\TemplateContentInterface[] $templates */
-    $templates = static::loadMultiple();
-    foreach ($templates as $id => $template) {
-      if (!$node_type) {
-        // If no node type is passed than all templates that *don't specify any*
-        // types are included, but those specifying a type are not.
-        if (!empty($template->getNodeTypes())) {
-          unset($templates[$id]);
-        }
-      }
-      else {
-        // Any templates without types, plus the templates that specify this type.
-        if (empty($template->getNodeTypes()) || in_array($node_type->id(), $template->getNodeTypes())) {
-          continue;
-        }
-        unset($templates[$id]);
-      }
-    }
-
-    return $templates;
   }
 
 }

@@ -2,14 +2,12 @@
 
 namespace Drupal\wysiwyg_template_content\Form;
 
-use Drupal\user\Plugin\views\filter\Name;
-use Drupal\Core\Entity\Element\EntityAutocomplete;
 use Drupal\Core\Entity\BundleEntityFormBase;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Config\Entity\ConfigEntityStorageInterface;
-use Drupal\Core\Link;
+use Drupal\node\Entity\NodeType;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -88,6 +86,19 @@ class CategoryForm extends BundleEntityFormBase {
       '#title' => $this->t('Description'),
       '#default_value' => $category->getDescription(),
     );
+
+    $node_types = array_map(function ($item) {
+      return $item->label();
+    }, NodeType::loadMultiple());
+
+    $form['node_types'] = [
+      '#type' => 'checkboxes',
+      '#default_value' => $category->getNodeTypes(),
+      '#title' => $this->t('Available for content types'),
+      '#description' => $this->t('If you select no content type, this category will be available on all content types.'),
+      '#access' => (bool) count($node_types),
+      '#options' => $node_types,
+    ];
 
     $form = parent::form($form, $form_state);
     return $this->protectBundleIdElement($form);

@@ -3,6 +3,7 @@
 namespace Drupal\wysiwyg_template_content\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
+use Drupal\node\NodeTypeInterface;
 use Drupal\wysiwyg_template_content\CategoryInterface;
 
 /**
@@ -77,11 +78,11 @@ class Category extends ConfigEntityBundleBase implements CategoryInterface {
   protected $weight = 0;
 
   /**
-   * The users allowed to access the category.
+   * The node types the category will show on.
    *
-   * @var array
+   * @var string[]
    */
-  protected $users = [];
+  protected $node_types;
 
   /**
    * {@inheritdoc}
@@ -108,8 +109,41 @@ class Category extends ConfigEntityBundleBase implements CategoryInterface {
   /**
    * {@inheritdoc}
    */
+  public function getNodeTypes() {
+    return $this->node_types ?: [];
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function getDescription() {
     return $this->description;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function loadByNodeType(NodeTypeInterface $node_type = NULL) {
+    /** @var \Drupal\wysiwyg_template_content\CategoryInterface[] $categories */
+    $categories = static::loadMultiple();
+    foreach ($categories as $id => $category) {
+      if (!$node_type) {
+        // If no node type is passed than all templates that *don't specify any*
+        // types are included, but those specifying a type are not.
+        if (!empty($category->getNodeTypes())) {
+          unset($categories[$id]);
+        }
+      }
+      else {
+        // Any templates without types, plus the templates that specify this type.
+        if (empty($category->getNodeTypes()) || in_array($node_type->id(), $category->getNodeTypes())) {
+          continue;
+        }
+        unset($categories[$id]);
+      }
+    }
+
+    return $categories;
   }
 
 }

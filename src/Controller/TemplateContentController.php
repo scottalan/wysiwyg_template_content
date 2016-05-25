@@ -9,7 +9,6 @@ namespace Drupal\wysiwyg_template_content\Controller;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\node\NodeTypeInterface;
 use Drupal\wysiwyg_template_content\Entity\TemplateContent;
-use Drupal\wysiwyg_template_content\TemplateContentInterface;
 use Drupal\wysiwyg_template_content\CategoryInterface;
 use Symfony\Component\HttpFoundation\Response;
 
