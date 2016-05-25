@@ -128,11 +128,20 @@ function wysiwyg_template_category_get_names() {
   return $names;
 }
 
-/**
- * Entity URI callback.
- */
-function wysiwyg_template_content_uri($template) {
-  return new Url('entity.wysiwyg_template_content.canonical', array(
-    'wysiwyg_template_content' => $template->id(),
-  ));
-}
+///**
+// * Entity URI callback.
+// */
+//function wysiwyg_template_content_uri($template) {
+//  return new Url('entity.wysiwyg_template_content.canonical', array(
+//    'wysiwyg_template_content' => $template->id(),
+//  ));
+//}
+//
+///**
+// * Entity URI callback.
+// */
+//function taxonomy_term_uri($term) {
+//  return new Url('entity.taxonomy_term.canonical', array(
+//    'taxonomy_term' => $term->id(),
+//  ));
+//}

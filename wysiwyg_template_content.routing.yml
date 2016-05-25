@@ -17,10 +17,14 @@ entity.wysiwyg_template_category.add_form:
 entity.wysiwyg_template_content.add_form:
   path: '/admin/structure/template-categories/manage/{wysiwyg_template_category}/add'
   defaults:
-    _form: '\Drupal\wysiwyg_template_content\Form\TemplateContentForm'
+    _controller: '\Drupal\wysiwyg_template_content\Controller\TemplateContentController::addTemplate'
     _title: 'Create a new template'
+  options:
+    parameters:
+      wysiwyg_template_category:
+        type: 'entity:wysiwyg_template_category'
   requirements:
-    _entity_create_access: 'wysiwyg_template_content'
+    _entity_create_access: 'wysiwyg_template_content:{wysiwyg_template_category}'
 
 entity.wysiwyg_template_category.overview_form:
   path: '/admin/structure/template-categories/manage/{wysiwyg_template_category}/overview'

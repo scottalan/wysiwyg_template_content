@@ -7,22 +7,10 @@
 
 namespace Drupal\wysiwyg_template_content\Form;
 
-use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\ContentEntityForm;
-use Drupal\Core\Entity\EntityManager;
-use Drupal\Core\Entity\EntityManagerInterface;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Entity\EntityInterface;
-use Drupal\Core\Form\FormBase;
-use Drupal\Core\Form\FormBuilderInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Routing\RouteMatchInterface;
-use Drupal\Core\Link;
 use Drupal\node\Entity\NodeType;
-use Drupal\wysiwyg_template\Form\TemplateForm;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Drupal\wysiwyg_template\TemplateInterface;
+use Drupal\wysiwyg_template_content\CategoryInterface;
 
 /**
  * Defines a class that builds the Template Form.
@@ -30,51 +18,9 @@ use Drupal\wysiwyg_template\TemplateInterface;
 class TemplateContentForm extends ContentEntityForm {
 
   /**
-   * The template storage.
-   *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
-   */
-  protected $storage;
-
-  /**
-   * TemplateContentForm constructor.
-   *
-   * @param EntityTypeManagerInterface $entity_type_manager
-   */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
-    parent::__construct($entity_type_manager);
-    $this->storage = $entity_type_manager->getStorage('wysiwyg_template_content');
-  }
-
-  /**
    * {@inheritdoc}
    */
-//  public static function create(ContainerInterface $container) {
-//    /** @var \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager */
-//    $entity_type_manager = $container->get('entity_type.manager');
-//    return new static($entity_type_manager);
-//  }
-
-  /**
-   * {@inheritdoc}
-   */
-//  public function buildForm(array $form, FormStateInterface $form_state) {
-//    // Skip building the form if there are no available stores.
-//    $category_query = $this->entityManager->getStorage('wysiwyg_template_category')->getQuery();
-//    if ($category_query->count()->execute() == 0) {
-//      $link = Link::createFromRoute('Add a new category.', 'entity.wysiwyg_template_content.add_page');
-//      $form['warning'] = [
-//        '#markup' => t("Templates require a category. @link", ['@link' => $link->toString()]),
-//      ];
-//      return $form;
-//    }
-//
-//    return parent::buildForm($form, $form_state);
-//  }
-
-  public function form(array $form, FormStateInterface $form_state) {
-    $form =  parent::form($form, $form_state);
-
+  public function form(array $form, FormStateInterface $form_state, CategoryInterface $wysiwyg_template_category = NULL) {
     /* @var \Drupal\wysiwyg_template_content\Entity\TemplateContent $wysiwyg_template */
     $wysiwyg_template = $this->entity;
 
@@ -83,15 +29,15 @@ class TemplateContentForm extends ContentEntityForm {
 
     $form_state->set(['wysiwyg_template_content', 'wysiwyg_template_category'], $category);
 
-    $form['category'] = [
-      '#type' => 'entity_autocomplete',
-      '#title' => t('Find a category'),
-      '#target_type' => 'wysiwyg_template_category',
-      '#selection_settings' => [
-        'match_operator' => 'CONTAINS',
-      ],
-      '#required' => TRUE,
-    ];
+//    $form['category'] = [
+//      '#type' => 'entity_autocomplete',
+//      '#title' => t('Find a category'),
+//      '#target_type' => 'wysiwyg_template_category',
+//      '#selection_settings' => [
+//        'match_operator' => 'CONTAINS',
+//      ],
+//      '#required' => TRUE,
+//    ];
 
     $form['label'] = [
       '#type' => 'textfield',
@@ -150,7 +96,7 @@ class TemplateContentForm extends ContentEntityForm {
       '#value' => $wysiwyg_template->id(),
     );
 
-    return $form;
+    return parent::form($form, $form_state, $wysiwyg_template);
   }
 
   /**

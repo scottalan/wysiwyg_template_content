@@ -6,15 +6,31 @@
 
 namespace Drupal\wysiwyg_template_content\Controller;
 
+use Drupal\Core\Controller\ControllerBase;
 use Drupal\node\NodeTypeInterface;
-use Drupal\wysiwyg_template\Controller\TemplateController;
 use Drupal\wysiwyg_template_content\Entity\TemplateContent;
+use Drupal\wysiwyg_template_content\TemplateContentInterface;
+use Drupal\wysiwyg_template_content\CategoryInterface;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Default controller for the wysiwyg_template_content module.
  */
-class TemplateContentController extends TemplateController {
+class TemplateContentController extends ControllerBase {
+
+  /**
+   * Returns a form to create a template in a category.
+   *
+   * @param \Drupal\wysiwyg_template_content\CategoryInterface $wysiwyg_template_category
+   *   The category we are adding the template to.
+   *
+   * @return array
+   *   The template form.
+   */
+  public function addTemplate(CategoryInterface $wysiwyg_template_category) {
+    $template = $this->entityManager()->getStorage('wysiwyg_template_content')->create(array('category_id' => $wysiwyg_template_category->id()));
+    return $this->entityFormBuilder()->getForm($template);
+  }
 
   public function listJson(NodeTypeInterface $node_type = NULL) {
     $templates = [

@@ -28,8 +28,6 @@ use Drupal\wysiwyg_template_content\TemplateContentInterface;
  *     "views_data" = "Drupal\views\EntityViewsData",
  *     "form" = {
  *       "default" = "Drupal\wysiwyg_template_content\Form\TemplateContentForm",
- *       "add" = "Drupal\wysiwyg_template_content\Form\TemplateContentForm",
- *       "edit" = "Drupal\wysiwyg_template_content\Form\TemplateContentForm",
  *       "delete" = "Drupal\Core\Entity\ContentEntityDeleteForm"
  *     },
  *     "route_provider" = {
@@ -38,6 +36,7 @@ use Drupal\wysiwyg_template_content\TemplateContentInterface;
  *   },
  *   base_table = "wysiwyg_template_content",
  *   base_table = "wysiwyg_template_content_field_data",
+ *   uri_callback = "wysiwyg_template_content_uri",
  *   admin_permission = "administer wysiwyg templates",
  *   fieldable = TRUE,
  *   entity_keys = {
@@ -47,7 +46,7 @@ use Drupal\wysiwyg_template_content\TemplateContentInterface;
  *     "uuid" = "uuid"
  *   },
  *   bundle_entity_type = "wysiwyg_template_category",
- *   field_ui_base_route = "entity.wysiwyg_template_category.edit_form",
+ *   field_ui_base_route = "entity.wysiwyg_template_category.overview_form",
  *   links = {
  *     "canonical" = "/admin/template-categories/templates/{wysiwyg_template_content}",
  *     "edit-form" = "/admin/template-categories/templates/{wysiwyg_template_content}/edit",
@@ -200,27 +199,45 @@ class TemplateContent extends ContentEntityBase implements TemplateContentInterf
       ->setDisplayOptions('view', array(
         'label' => 'hidden',
         'type' => 'string',
-        'weight' => -5,
+        'weight' => -10,
       ))
       ->setDisplayOptions('form', array(
         'type' => 'string_textfield',
-        'weight' => -5,
+        'weight' => -10,
       ))
       ->setDisplayConfigurable('form', TRUE);
 
-    $fields['description'] = BaseFieldDefinition::create('text_long')
+    $fields['description'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Description'))
-      ->setDescription(t('A description of the template.'))
+      ->setDescription(t('Describe the template.'))
+      ->setRequired(TRUE)
+      ->setTranslatable(TRUE)
+      ->setRevisionable(TRUE)
+      ->setSetting('max_length', 255)
+      ->setDisplayOptions('view', array(
+        'label' => 'hidden',
+        'type' => 'string',
+        'weight' => -8,
+      ))
+      ->setDisplayOptions('form', array(
+        'type' => 'string_textfield',
+        'weight' => -8,
+      ))
+      ->setDisplayConfigurable('form', TRUE);
+
+    $fields['body'] = BaseFieldDefinition::create('text_long')
+      ->setLabel(t('HTML Template'))
+      ->setDescription(t('The template content.'))
       ->setTranslatable(TRUE)
       ->setDisplayOptions('view', array(
         'label' => 'hidden',
         'type' => 'text_default',
-        'weight' => 0,
+        'weight' => -9,
       ))
       ->setDisplayConfigurable('view', TRUE)
       ->setDisplayOptions('form', array(
         'type' => 'text_textfield',
-        'weight' => 0,
+        'weight' => -9,
       ))
       ->setDisplayConfigurable('form', TRUE);
 

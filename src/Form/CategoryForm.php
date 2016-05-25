@@ -113,6 +113,7 @@ class CategoryForm extends BundleEntityFormBase {
         break;
     }
 
+    // Redirect the user to the category listing page.
     $form_state->setRedirectUrl($category->toUrl('collection'));
   }
 
@@ -126,7 +127,7 @@ class CategoryForm extends BundleEntityFormBase {
    *   TRUE if the category exists, FALSE otherwise.
    */
   public function exists($category_id) {
-    $action = $this->category_storage->load($category_id);
+    $action = $this->storage->load($category_id);
     return !empty($action);
   }
 
