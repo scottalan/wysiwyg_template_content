@@ -81,12 +81,6 @@ class TemplateContentForm extends ContentEntityForm {
         break;
     }
 
-    if ($form_state->hasValue(['wysiwyg_template_content', 'wysiwyg_template_category'])) {
-      $yes = TRUE;
-    }
-    $category_value1 = $form_state->getValue('category_id');
-    $category_value = $form_state->get(['wysiwyg_template_content', 'wysiwyg_template_category']);
-
     $form_state->setValue('template_id', $this->entity->id());
     $form_state->set('template_id', $this->entity->id());
   }

@@ -2,11 +2,12 @@
 
 namespace Drupal\wysiwyg_template_content\Form;
 
-use Drupal\Component\Utility\Html;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Form\FormStateInterface;
+
 use Drupal\Core\Form\FormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\CurrentRouteMatch;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Component\Utility\Html;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class CategoryOverviewForm extends FormBase {
@@ -63,21 +64,21 @@ class CategoryOverviewForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $user_input = $form_state->getUserInput();
-    $values = $this->category->getTemplates();
+    $templates = $this->category->getTemplates();
 
     // Set the form title to that of the category.
     $title = $this->category->label();
 
     // The value map allows new values to be added and removed before saving.
     // An array in the $index => $id format. $id is '_new' for unsaved values.
-    $value_map = (array) $form_state->get('value_map');
-    if (empty($value_map)) {
-      $value_map = $values ? array_keys($values) : ['_new'];
-      $form_state->set('value_map', $value_map);
+    $template_map = (array) $form_state->get('value_map');
+    if (empty($template_map)) {
+      $template_map = $templates ? array_keys($templates) : ['_new'];
+      $form_state->set('value_map', $template_map);
     }
 
     $wrapper_id = Html::getUniqueId('template-categories-category-values-ajax-wrapper');
-    $form['values'] = [
+    $form['templates'] = [
       '#type' => 'table',
       '#header' => [
         ['data' => $this->t('Template'), 'colspan' => 2],
@@ -102,26 +103,26 @@ class CategoryOverviewForm extends FormBase {
     ];
 
     // If there are not templates just return the form now.
-    if (empty($values)) {
+    if (empty($templates)) {
       return $form;
     }
 
     // Make the weight list always reflect the current number of values.
     // Taken from WidgetBase::formMultipleElements().
-    $max_weight = count($value_map);
+    $max_weight = count($template_map);
 
 //    $tree = $this->storageController->loadTree($taxonomy_vocabulary->id(), 0, NULL, TRUE);
 
-    foreach ($value_map as $index => $id) {
-      $value_form = &$form['values'][$index];
+    foreach ($template_map as $index => $id) {
+      $template_form = &$form['templates'][$index];
       // The tabledrag element is always added to the first cell in the row,
       // so we add an empty cell to guide it there, for better styling.
-      $value_form['#attributes']['class'][] = 'draggable';
-      $value_form['tabledrag'] = [
+      $template_form['#attributes']['class'][] = 'draggable';
+      $template_form['tabledrag'] = [
         '#markup' => '',
       ];
 
-      $value_form['template'] = [
+      $template_form['template'] = [
         '#type' => 'link',
         '#title' => t('title here'),
 //        '#url' => $term->urlInfo(),
@@ -131,13 +132,13 @@ class CategoryOverviewForm extends FormBase {
         $remove_access = TRUE;
       }
       else {
-        $value = $values[$id];
-        $value_form['template']['#default_value'] = $value;
+        $value = $templates[$id];
+        $template_form['template']['#default_value'] = $value;
         $default_weight = $value->getWeight();
         $remove_access = $value->access('delete');
       }
 
-      $value_form['weight'] = [
+      $template_form['weight'] = [
         '#type' => 'weight',
         '#title' => $this->t('Weight'),
         '#title_display' => 'invisible',
@@ -149,10 +150,10 @@ class CategoryOverviewForm extends FormBase {
       ];
       // Used by SortArray::sortByWeightProperty to sort the rows.
       if (isset($user_input['values'][$index])) {
-        $value_form['#weight'] = $user_input['values'][$index]['weight'];
+        $template_form['#weight'] = $user_input['values'][$index]['weight'];
       }
       else {
-        $value_form['#weight'] = $default_weight;
+        $template_form['#weight'] = $default_weight;
       }
 
 
@@ -179,7 +180,7 @@ class CategoryOverviewForm extends FormBase {
         ],
       ];
 
-//      $value_form['remove'] = [
+//      $template_form['remove'] = [
 //        '#type' => 'submit',
 //        '#name' => 'remove_value' . $index,
 //        '#value' => $this->t('Remove'),
@@ -195,14 +196,14 @@ class CategoryOverviewForm extends FormBase {
     }
 
     // Sort the values by weight. Ensures weight is preserved on ajax refresh.
-    uasort($form['values'], ['\Drupal\Component\Utility\SortArray', 'sortByWeightProperty']);
+    uasort($form['templates'], ['\Drupal\Component\Utility\SortArray', 'sortByWeightProperty']);
 
     $access_handler = $this->entityTypeManager->getAccessControlHandler('wysiwyg_template_content');
     if ($access_handler->createAccess($this->category->id())) {
-      $form['values']['_add_new'] = [
+      $form['templates']['_add_new'] = [
         '#tree' => FALSE,
       ];
-      $form['values']['_add_new']['entity'] = [
+      $form['templates']['_add_new']['entity'] = [
         '#type' => 'submit',
         '#value' => $this->t('Add'),
         '#submit' => ['::addValueSubmit'],
@@ -214,10 +215,10 @@ class CategoryOverviewForm extends FormBase {
         '#prefix' => '<div class="template-categories-category-value-new">',
         '#suffix' => '</div>',
       ];
-      $form['values']['_add_new']['weight'] = [
+      $form['templates']['_add_new']['weight'] = [
         'data' => [],
       ];
-      $form['values']['_add_new']['operations'] = [
+      $form['templates']['_add_new']['operations'] = [
         'data' => [],
       ];
     }
@@ -241,16 +242,16 @@ class CategoryOverviewForm extends FormBase {
    * Ajax callback for value operations.
    */
   public function valuesAjax(array $form, FormStateInterface $form_state) {
-    return $form['values'];
+    return $form['templates'];
   }
 
   /**
    * Submit callback for adding a new value.
    */
   public function addValueSubmit(array $form, FormStateInterface $form_state) {
-    $value_map = (array) $form_state->get('value_map');
-    $value_map[] = '_new';
-    $form_state->set('value_map', $value_map);
+    $template_map = (array) $form_state->get('value_map');
+    $template_map[] = '_new';
+    $form_state->set('value_map', $template_map);
     $form_state->setRebuild();
   }
 
@@ -258,15 +259,15 @@ class CategoryOverviewForm extends FormBase {
    * Submit callback for removing a value.
    */
   public function removeValueSubmit(array $form, FormStateInterface $form_state) {
-    $value_index = $form_state->getTriggeringElement()['#value_index'];
-    $value_map = (array) $form_state->get('value_map');
-    $value_id = $value_map[$value_index];
-    unset($value_map[$value_index]);
-    $form_state->set('value_map', $value_map);
+    $template_index = $form_state->getTriggeringElement()['#value_index'];
+    $template_map = (array) $form_state->get('value_map');
+    $template_id = $template_map[$template_index];
+    unset($template_map[$template_index]);
+    $form_state->set('value_map', $template_map);
     // Non-new values also need to be deleted from storage.
-    if ($value_id != '_new') {
+    if ($template_id != '_new') {
       $delete_queue = (array) $form_state->get('delete_queue');
-      $delete_queue[] = $value_id;
+      $delete_queue[] = $template_id;
       $form_state->set('delete_queue', $delete_queue);
     }
     $form_state->setRebuild();
@@ -278,15 +279,15 @@ class CategoryOverviewForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $delete_queue = $form_state->get('delete_queue');
     if (!empty($delete_queue)) {
-      $value_storage = $this->entityTypeManager->getStorage('wysiwyg_template_content');
-      $values = $value_storage->loadMultiple($delete_queue);
-      $value_storage->delete($values);
+      $template_storage = $this->entityTypeManager->getStorage('wysiwyg_template_content');
+      $templates = $template_storage->loadMultiple($delete_queue);
+      $template_storage->delete($templates);
     }
 
-    foreach ($form_state->getValue(['values']) as $index => $value_data) {
+    foreach ($form_state->getValue(['values']) as $index => $template_data) {
       /** @var \Drupal\wysiwyg_template_content\TemplateContentInterface $template */
-      $template = $form['values'][$index]['entity']['#entity'];
-      $template->setWeight($value_data['weight']);
+      $template = $form['templates'][$index]['entity']['#entity'];
+      $template->setWeight($template_data['weight']);
       $template->save();
     }
 
